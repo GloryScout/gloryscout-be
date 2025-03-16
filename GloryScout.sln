@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35707.178
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gloryscout.API", "gloryscout.API\gloryscout.API.csproj", "{C25CCEA8-0BF8-4C6D-BFCE-876D23F90C45}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GloryScout.Domain", "GloryScout.Domain\GloryScout.Domain.csproj", "{A2A0D6CA-665A-46BA-B32F-60186B009EFC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GloryScout.Data", "GloryScout.Data\GloryScout.Data.csproj", "{F9BEBC2B-6429-4937-9944-C31DF8F27842}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C25CCEA8-0BF8-4C6D-BFCE-876D23F90C45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C25CCEA8-0BF8-4C6D-BFCE-876D23F90C45}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C25CCEA8-0BF8-4C6D-BFCE-876D23F90C45}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C25CCEA8-0BF8-4C6D-BFCE-876D23F90C45}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2A0D6CA-665A-46BA-B32F-60186B009EFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2A0D6CA-665A-46BA-B32F-60186B009EFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2A0D6CA-665A-46BA-B32F-60186B009EFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2A0D6CA-665A-46BA-B32F-60186B009EFC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9BEBC2B-6429-4937-9944-C31DF8F27842}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9BEBC2B-6429-4937-9944-C31DF8F27842}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9BEBC2B-6429-4937-9944-C31DF8F27842}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9BEBC2B-6429-4937-9944-C31DF8F27842}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
