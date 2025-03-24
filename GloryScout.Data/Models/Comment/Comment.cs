@@ -16,7 +16,7 @@ namespace GloryScout.Data
 		public DateTime CreatedAt { get; set; } = DateTime.Now;
 
 		// Navigation properties
-		[ForeignKey("UserId")] public virtual User User { get; set; } = new User();
-		[ForeignKey("PostId")] public virtual Post Post { get; set; } = new Post();
+		[ForeignKey("UserId")] public virtual User User { get; set; } 
+		[ForeignKey("PostId")] public virtual Post Post { get; set; } 
 	}
 }

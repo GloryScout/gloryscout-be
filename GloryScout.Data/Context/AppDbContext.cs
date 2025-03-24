@@ -47,14 +47,17 @@ namespace GloryScout.Data
 			base.OnModelCreating(modelBuilder);
 
 			// Apply entity configurations
-			modelBuilder.ApplyConfiguration(new UserConfiguration());
-			modelBuilder.ApplyConfiguration(new PostConfiguration());
-			modelBuilder.ApplyConfiguration(new LikeConfiguration());
-			modelBuilder.ApplyConfiguration(new CommentConfiguration());
-			modelBuilder.ApplyConfiguration(new VerificationCodeConfiguration());
-			modelBuilder.ApplyConfiguration(new ApplicationConfiguration());
-			modelBuilder.ApplyConfiguration(new PlayerConfiguration());
-			modelBuilder.ApplyConfiguration(new ScoutConfiguration());
+			modelBuilder.ApplyConfigurationsFromAssembly(typeof(UserConfiguration).Assembly);
+			modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationConfiguration).Assembly);
+			modelBuilder.ApplyConfigurationsFromAssembly(typeof(PlayerConfiguration).Assembly);
+			modelBuilder.ApplyConfigurationsFromAssembly(typeof(PostConfiguration).Assembly);
+			modelBuilder.ApplyConfigurationsFromAssembly(typeof(LikeConfiguration).Assembly);
+			modelBuilder.ApplyConfigurationsFromAssembly(typeof(VerificationCodeConfiguration).Assembly);
+			modelBuilder.ApplyConfigurationsFromAssembly(typeof(ScoutConfiguration).Assembly);
+			modelBuilder.ApplyConfigurationsFromAssembly(typeof(CommentConfiguration).Assembly);
+
+			// Apply entity configurations
+		
 
 			// Seed identity roles
 			modelBuilder.Entity<IdentityRole<Guid>>().HasData(

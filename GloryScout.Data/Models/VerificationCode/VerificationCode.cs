@@ -17,6 +17,6 @@ namespace GloryScout.Data
 		public string UserEmail { get; set; }
 
 		// Navigation properties
-		[ForeignKey("UserId")] public virtual User User { get; set; } = new User();
+		[ForeignKey("UserId")] public virtual User User { get; set; } 
 	}
 }

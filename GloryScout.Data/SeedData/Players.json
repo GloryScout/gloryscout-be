@@ -1,0 +1,50 @@
+[
+  {
+    "Id": "A3E1F7B2-4C9A-4D23-9CBB-1234567890AB",
+    "Name": "Lionel Messi",
+    "Position": "Forward",
+    "DominantFoot": "Left",
+    "PhoneNumber": "+54 11 2345-6789",
+    "ProfileDescription": "Argentine forward known for exceptional dribbling and vision.",
+    "Weight": 72,
+    "Height": 170,
+    "CurrentTeam": "PSG",
+    "UserId": "D1C1F3B4-7A9B-4E3A-9FCD-0987654321EF"
+  },
+  {
+    "Id": "B4F2D8C3-5D1B-4A5E-8ABB-234567890ABC",
+    "Name": "Cristiano Ronaldo",
+    "Position": "Forward",
+    "DominantFoot": "Right",
+    "PhoneNumber": "+351 21 9876-5432",
+    "ProfileDescription": "Portuguese forward with a prolific scoring record.",
+    "Weight": 83,
+    "Height": 187,
+    "CurrentTeam": "AL-NASSR",
+    "UserId": "E2D2F4B5-8B1C-4F4B-8ECD-1234567890AB"
+  },
+  {
+    "Id": "C5E2D8C3-6D7B-4F4B-9ABB-345678901ABC",
+    "Name": "Neymar Jr.",
+    "Position": "Winger",
+    "DominantFoot": "Right",
+    "PhoneNumber": "+55 21 8765-4321",
+    "ProfileDescription": "Brazilian winger with exceptional flair and creativity.",
+    "Weight": 68,
+    "Height": 175,
+    "CurrentTeam": "AL HILAL",
+    "UserId": "F3D2F4A5-8B1C-4F4B-8ECD-234567890ABC"
+  },
+  {
+    "Id": "D6F2D8C3-7D9B-4A5E-8FBB-456789012ABC",
+    "Name": "Kylian Mbappé",
+    "Position": "Striker",
+    "DominantFoot": "Right",
+    "PhoneNumber": "+33 1 7654-3210",
+    "ProfileDescription": "French forward with electric pace and finishing.",
+    "Weight": 74,
+    "Height": 178,
+    "CurrentTeam": "PSG",
+    "UserId": "A4C2D4B5-7B2C-4E4B-9FCD-345678901ABC"
+  }
+]

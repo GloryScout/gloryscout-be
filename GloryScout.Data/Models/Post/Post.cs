@@ -9,6 +9,11 @@ namespace GloryScout.Data
 {
 	public class Post
 	{
+		public Post()
+		{
+			Comments = new HashSet<Comment>();
+			Likes = new HashSet<Like>();
+		}
 		public Guid Id { get; set; }
 		public string Description { get; set; }
 		public DateTime CreatedAt { get; set; } = DateTime.Now;
@@ -16,7 +21,7 @@ namespace GloryScout.Data
 		public string B2UrlKey { get; set; }
 
 		// Navigation properties
-		[ForeignKey("UserId")] public virtual User User { get; set; } = new User();
+		[ForeignKey("UserId")] public virtual User User { get; set; } 
 		public virtual ICollection<Comment> Comments { get; set; }
 		public virtual ICollection<Like> Likes { get; set; }
 	}

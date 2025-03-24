@@ -17,7 +17,7 @@ namespace GloryScout.Data
 		public Guid PlayerId { get; set; }
 
 		// Navigation properties
-		[ForeignKey("ScoutId")]public virtual Scout Scout { get; set; } = new Scout();
-		[ForeignKey("PlayerId")] public virtual Player Player { get; set; } = new Player();
+		[ForeignKey("ScoutId")]public virtual Scout Scout { get; set; } 
+		[ForeignKey("PlayerId")] public virtual Player Player { get; set; } 
 	}
 }
