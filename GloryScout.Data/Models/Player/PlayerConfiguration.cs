@@ -14,9 +14,6 @@ namespace GloryScout.Data
 		{
 			builder.HasKey(p => p.Id);
 
-			builder.Property(p => p.Name)
-				.IsRequired()
-				.HasMaxLength(100);
 
 			builder.Property(p => p.Position)
 				.IsRequired()
@@ -25,8 +22,6 @@ namespace GloryScout.Data
 			builder.Property(p => p.DominantFoot)
 				.HasMaxLength(20);
 
-			builder.Property(p => p.PhoneNumber)
-				.HasMaxLength(20);
 
 			builder.Property(p => p.ProfileDescription)
 				.HasMaxLength(1000);

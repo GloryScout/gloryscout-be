@@ -14,10 +14,11 @@ namespace GloryScout.Data
 			Comments = new HashSet<Comment>();
 			Likes = new HashSet<Like>();
 		}
-		public string Nationality { get; set; }
+		public string Nationality { get; set; } = "Egyptian";
 		public DateTime CreatedAt { get; set; } = DateTime.Now;
 		public string UserType { get; set; }
 		public bool IsVerified { get; set; } = false;
+		public string? ProfilePhoto { get; set; } // profile photo URL
 
 		// Navigation properties
 		public  ICollection<VerificationCode> VerificationCodes { get; set; }

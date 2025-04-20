@@ -14,20 +14,9 @@ namespace GloryScout.Data
 		{
 			builder.HasKey(s => s.Id);
 
-			builder.Property(s => s.ClubName)
-				.IsRequired()
-				.HasMaxLength(100);
-
 			builder.Property(s => s.ProfileDescription)
 				.HasMaxLength(1000);
 
-			builder.Property(s => s.ContactDetails)
-				.IsRequired()
-				.HasMaxLength(500);
-
-			builder.Property(s => s.Location)
-				.IsRequired()
-				.HasMaxLength(100);
 
 			// Relationships
 			builder.HasOne(s => s.User)

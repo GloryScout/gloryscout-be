@@ -14,10 +14,12 @@ namespace GloryScout.Data
 			Applications = new HashSet<Application>();
 		}
 		public Guid Id { get; set; }
-		public string ClubName { get; set; }
-		public string ProfileDescription { get; set; }
-		public string ContactDetails { get; set; }
-		public string Location { get; set; }
+		public string? ClubName { get; set; }
+		public string? ProfileDescription { get; set; } // will be in the player profile
+		public string? Specialization { get; set; }
+		public int? Experience { get; set; }
+		public string? CurrentClubName { get; set; }
+		public string? CoachingSpecialty { get; set; }
 		public Guid UserId { get; set; }
 
 		// Navigation properties
