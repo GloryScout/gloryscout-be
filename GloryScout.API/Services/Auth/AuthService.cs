@@ -7,6 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using GloryScout.Data;
 using GloryScout.InfraStructure;
 using GloryScout.Domain.Dtos.IdentityDtos;
+using Microsoft.EntityFrameworkCore;
 
 namespace GloryScout.API.Services.Auth;
 
@@ -17,6 +18,7 @@ public class AuthService : IAuthService
     private readonly UserManager<User> _userManager;
     private readonly AppDbContext _context;
 	private readonly CloudinaryService _cloudinaryService;
+    private readonly ILogger<AuthService> _logger;
 
 
 	public AuthService(
@@ -24,13 +26,15 @@ public class AuthService : IAuthService
 		AppDbContext context,
         IOptions<Jwt> jwt,
         IMapper mapper,
-		CloudinaryService cloudinaryService)
+		CloudinaryService cloudinaryService,
+        ILogger<AuthService> logger)
     {
         _jwt = jwt.Value;
         _mapper = mapper;
         _userManager = userManager;
         _context = context;
 		_cloudinaryService = cloudinaryService;
+        _logger = logger;
 	}
 
 
@@ -148,20 +152,20 @@ public class AuthService : IAuthService
 
 		var jwtSecurityToken = await CreatePlayerJwtToken(user, "Player");
 
-		return new AuthDto
-		{
-			Email = user.Email,
-			ExpiresOn = jwtSecurityToken.ValidTo,
-			IsAuthenticated = true,
-			Role = "Player",
-			Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
-			Username = user.UserName
-		};
+        return new AuthDto
+        {
+            Email = user.Email,
+            ExpiresOn = jwtSecurityToken.ValidTo,
+            IsAuthenticated = true,
+            Role = "Player",
+            Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
+            Username = user.UserName
+        };
 	}
 
 
 
-	public async Task<AuthDto> LoginAsync(LoginDto dto)
+    public async Task<AuthDto> LoginAsync(LoginDto dto)
     {
         var authModel = new AuthDto();
 
@@ -181,6 +185,9 @@ public class AuthService : IAuthService
         authModel.ExpiresOn = jwtSecurityToken.ValidTo;
         authModel.Role = jwtSecurityToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)!.Value;
         authModel.Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
+        authModel.ProfilePhoto = user.ProfilePhoto;
+        
+
         return authModel;
     }
 
@@ -316,50 +323,50 @@ public class AuthService : IAuthService
         };
     }
 
-    public async Task SendPasswordResetCodeAsync(string email)
-    {
-        // Get Identity User details user user manager
-        var user = await _userManager.FindByEmailAsync(email);
+	public async Task SendPasswordResetCodeAsync(string email)
+	{
+		var user = await _userManager.FindByEmailAsync(email);
+		if (user == null)
+		{
+			_logger.LogWarning("Password reset requested for non-existent email: {Email}", email);
+			return;
+		}
 
-        // Generate password reset token
-        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+		// Generate a 6-digit OTP
+		var rng = new Random();
+		var code = rng.Next(100000, 999999).ToString();
 
-        // Generate OTP
-        int otp = RandomNumberGeneartor.Generate(100000, 999999);
+		var resetCode = new VerificationCode
+		{
+			Id = Guid.NewGuid(),
+			UserId = user.Id,
+			UserEmail = email,
+			Code = code,
+			CreateadAt = DateTime.UtcNow.AddMinutes(10),
+			IsUsed = false
+		};
 
-        var resetPassword = new ResetPassword()
-        {
-            Email = email,
-            OTP = otp.ToString(),
-            Token = token,
-            UserId = user.Id,
-            User = user,
-            InsertDateTimeUtc = DateTime.UtcNow
-        };
+		_context.VerificationCodes.Add(resetCode);
+		await _context.SaveChangesAsync();
+		
+		var message = $"Your password reset code is: {code}. It will expire in 10 minutes.";
+		await EmailSender.SendEmailAsync(email, "Password Reset Code", message);
+		_logger.LogInformation("Password reset code generated and emailed to {Email}", email);
+	}
 
-        // Save data into db with OTP
-        await _context.AddAsync(resetPassword);
-        await _context.SaveChangesAsync();
-
-        // to do: Send token in email
-        await EmailSender.SendEmailAsync(email, "Reset Password OTP", "Hello "
-                                                                      + email + "<br><br>Please find the reset password token below<br><br><b>"
-                                                                      + otp + "<b><br><br>Thanks<br>oktests.com");
-    }
-    
-    public async Task<IdentityResult> ResetPasswordAsync(ResetPasswordDto dto)
+	public async Task<IdentityResult> ResetPasswordAsync(ResetPasswordDto dto)
     {
         // Get Identity User details user user manager
         var user = await _userManager.FindByEmailAsync(dto.Email);
 
         // getting token from otp
-        var resetPasswordDetails = await _context.ResetPasswords
-            .Where(rp => rp.OTP == dto.OTP && rp.UserId == user.Id)
-            .OrderByDescending(rp => rp.InsertDateTimeUtc)
+        var resetPasswordDetails = await _context.VerificationCodes
+            .Where(rp => rp.Code == dto.OTP && rp.UserId == user.Id)
+            .OrderByDescending(rp => rp.CreateadAt)
             .FirstOrDefaultAsync();
 
         // Verify if token is older than 15 minutes
-        var expirationDateTimeUtc = resetPasswordDetails!.InsertDateTimeUtc.AddMinutes(15);
+        var expirationDateTimeUtc = resetPasswordDetails!.CreateadAt.AddMinutes(15);
 
         if (expirationDateTimeUtc < DateTime.UtcNow)
         {
@@ -409,5 +416,47 @@ public class AuthService : IAuthService
             Username = user.UserName
         };
     }
+
+	public async Task<bool> VerifyPasswordResetCodeAsync(string email, string code)
+	{
+		// Fetch the most recent, unused reset code for this email
+		var record = await _context.VerificationCodes
+			.Where(v => v.UserEmail == email && !v.IsUsed)
+			.OrderByDescending(v => v.CreateadAt)
+			.FirstOrDefaultAsync();
+
+		if (record == null || record.Code != code || record.CreateadAt < DateTime.UtcNow)
+			return false;
+
+		// Mark as used
+		record.IsUsed = true;
+		_context.VerificationCodes.Update(record);
+		await _context.SaveChangesAsync();
+
+		return true;
+	}
+
+	public async Task<IdentityResult> ResetPasswordAsync(string email, string code, string newPassword)
+	{
+		// First verify the code
+		var verified = await VerifyPasswordResetCodeAsync(email, code);
+		if (!verified)
+			return IdentityResult.Failed(new IdentityError { Description = "Invalid or expired reset code." });
+
+		// Reset the password
+		var user = await _userManager.FindByEmailAsync(email);
+		if (user == null)
+			return IdentityResult.Failed(new IdentityError { Description = "User not found." });
+
+		// Generate a password reset token from Identity
+		var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+		var result = await _userManager.ResetPasswordAsync(user, resetToken, newPassword);
+		if (!result.Succeeded)
+		{
+			_logger.LogWarning("Password reset for {Email} failed: {Errors}", email, string.Join(',', result.Errors.Select(e => e.Description)));
+		}
+
+		return result;
+	}
 
 }

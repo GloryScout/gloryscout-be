@@ -9,5 +9,6 @@
         public string Role { get; set; } = String.Empty;
         public string Token { get; set; } = String.Empty;
         public DateTime ExpiresOn { get; set; }
+        public string ProfilePhoto { get; set; }
     }
 }

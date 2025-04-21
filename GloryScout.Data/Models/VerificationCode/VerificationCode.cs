@@ -11,7 +11,9 @@ namespace GloryScout.Data
 	{
 		public Guid Id { get; set; }
 		public bool IsUsed { get; set; } = false;
-		public DateTime ExpiresAt { get; set; } = DateTime.Now.AddMinutes(10);
+		[StringLength(5000)]
+		public string Token { get; set; } = String.Empty;
+		public DateTime CreateadAt { get; set; } = DateTime.Now.AddMinutes(10);
 		public string Code { get; set; }
 		public Guid UserId { get; set; }
 		public string UserEmail { get; set; }

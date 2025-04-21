@@ -10,7 +10,7 @@ namespace GloryScout.API;
 #pragma warning restore CS1998
         {
             string fromMail = "radi.allowforall@gmail.com";
-            var fromMailAddress = new MailAddress(fromMail,"Spart Parts Application");
+            var fromMailAddress = new MailAddress(fromMail, "GlorysScout Application");
             string fromPassword = "bdxlqeqidjgofwaq";
 
             MailMessage message = new MailMessage();

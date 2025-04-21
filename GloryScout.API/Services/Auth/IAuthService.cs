@@ -12,5 +12,8 @@ namespace GloryScout.API.Services.Auth
 		//Task<AuthDto> RegisterAsync(RegisterDto dto);
 		Task<AuthDto> LoginAsync(LoginDto dto);
         Task<AuthDto> UpdateUserAsync(UpdateUserDto dto);
-    }
+
+		Task<bool> VerifyPasswordResetCodeAsync(string email, string code);
+		Task<IdentityResult> ResetPasswordAsync(string email, string code, string newPassword);
+	}
 }

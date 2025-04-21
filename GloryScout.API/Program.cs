@@ -44,6 +44,10 @@ builder.Services.AddControllers()
 		options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 	});
 
+//builder.WebHost
+//	   .UseKestrel()
+//	   .UseUrls("http://0.0.0.0:5000", "https://0.0.0.0:5001");
+
 #endregion
 
 #region pipeline

@@ -26,7 +26,7 @@ namespace GloryScout.Data
 				.IsRequired()
 				.HasDefaultValue(false);
 
-			builder.Property(v => v.ExpiresAt)
+			builder.Property(v => v.CreateadAt)
 				.IsRequired();
 
 			// Relationships
