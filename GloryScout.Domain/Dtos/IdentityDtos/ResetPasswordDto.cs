@@ -10,7 +10,8 @@ namespace GloryScout.Domain
             OTP = otp;
             NewPassword = newPassword;
         }
-        
+        [Required]
+        [EmailAddress]
         public string Email { get; set; }
 
         [Required, StringLength(10)]

@@ -62,7 +62,7 @@ public class usersController : ControllerBase
 
 
 	[HttpPost("login")] 
-    public async Task<IActionResult> GetTokenAsync(LoginDto model)
+    public async Task<IActionResult> GetTokenAsync([FromForm] LoginDto model)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -176,7 +176,7 @@ public class usersController : ControllerBase
 	/// </summary>
 	[HttpPost("Send-Password-ResetCode")]
 	[AllowAnonymous]
-	public async Task<IActionResult> SendPasswordResetCode([FromBody] SendResetCodeDto dto)
+	public async Task<IActionResult> SendPasswordResetCode([FromForm] SendResetCodeDto dto)
 	{
 		if (string.IsNullOrEmpty(dto.Email))
 			return BadRequest("Email should not be null or empty");
@@ -192,7 +192,7 @@ public class usersController : ControllerBase
 	/// </summary>
 	[HttpPost("Reset-Password")]
 	[AllowAnonymous]
-	public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto dto)
+	public async Task<IActionResult> ResetPassword([FromForm] ResetPasswordDto dto)
 	{
 		if (string.IsNullOrEmpty(dto.Email)
 			|| string.IsNullOrEmpty(dto.OTP)
