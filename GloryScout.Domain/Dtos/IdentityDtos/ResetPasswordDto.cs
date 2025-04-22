@@ -4,13 +4,17 @@ namespace GloryScout.Domain
 {
     public class ResetPasswordDto : IDtos
     {
-        public ResetPasswordDto(string email, string otp, string newPassword)
-        {
-            Email = email;
-            OTP = otp;
-            NewPassword = newPassword;
-        }
-        [Required]
+		//public ResetPasswordDto(string email, string otp, string newPassword)
+		//{
+		//    Email = email;
+		//    OTP = otp;
+		//    NewPassword = newPassword;
+		//}
+		public ResetPasswordDto()
+		{
+			
+		}
+		[Required]
         [EmailAddress]
         public string Email { get; set; }
 

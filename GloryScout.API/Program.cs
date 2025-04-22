@@ -69,6 +69,10 @@ if (app.Environment.IsDevelopment())
 	app.UseSwagger();
 	app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Spare Parts v1"));
 }
+app.UseSwagger();
+app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Spare Parts v1"));
+
+
 
 //app.Use(async (context, next) =>
 //{
@@ -86,6 +90,9 @@ app.MapControllers();
 
 app.Run();
 
+
+
+//Data Source=DESKTOP-8BMN06A;Initial Catalog=GloryScoutDatabase;Integrated Security=True
 #endregion
 
 #region Program
