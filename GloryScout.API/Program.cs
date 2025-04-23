@@ -1,7 +1,9 @@
 using System.Reflection;
 using FluentValidation.AspNetCore;
 using GloryScout.API.Services;
-using GloryScout.Data.SeedData;
+using GloryScout.API.Services.PlayerServiceandCoach;
+using GloryScout.Services;
+
 
 
 
@@ -43,6 +45,7 @@ builder.Services.AddControllers()
 	{
 		options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 	});
+       builder.Services.AddScoped<IPlayerService, PlayerService>();
 
 //builder.WebHost
 //	   .UseKestrel()
