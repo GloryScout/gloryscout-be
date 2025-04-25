@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GloryScout.Services
 {
-    public class PlayerService : IPlayerService
+    public class UserProfileService : IUserProfileService
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
