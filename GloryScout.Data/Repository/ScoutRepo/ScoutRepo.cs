@@ -43,5 +43,11 @@ namespace GloryScout.Data.Repository.ScoutRepo
 				.Where(s => s.Specialization == specialization)
 				.ToListAsync();
 		}
+
+		// returns all coaches 
+		public async Task<IEnumerable<Scout>> GetAllAsync()
+		{
+			return await _db.Scouts.ToListAsync();
+		}
 	}
 }

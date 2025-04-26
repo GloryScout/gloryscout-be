@@ -115,6 +115,68 @@ namespace GloryScout.Data.Migrations
                     b.ToTable("Likes");
                 });
 
+            modelBuilder.Entity("GloryScout.Data.Models.Entities.CoachProfile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Bio")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("FollowersCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FollowingCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ProfilePictureUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CoachProfiles");
+                });
+
+            modelBuilder.Entity("GloryScout.Data.Models.Entities.PlayerProfile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Bio")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("FollowersCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FollowingCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ProfilePictureUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PlayerProfiles");
+                });
+
             modelBuilder.Entity("GloryScout.Data.Player", b =>
                 {
                     b.Property<Guid>("Id")
@@ -390,6 +452,37 @@ namespace GloryScout.Data.Migrations
                     b.ToTable("VerificationCodes");
                 });
 
+            modelBuilder.Entity("GloryScout.Domain.Entities.Media", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("CoachProfileId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PlayerProfileId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CoachProfileId");
+
+                    b.HasIndex("PlayerProfileId");
+
+                    b.ToTable("MediaItems");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
                 {
                     b.Property<Guid>("Id")
@@ -656,6 +749,23 @@ namespace GloryScout.Data.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("GloryScout.Domain.Entities.Media", b =>
+                {
+                    b.HasOne("GloryScout.Data.Models.Entities.CoachProfile", "CoachProfile")
+                        .WithMany("MediaItems")
+                        .HasForeignKey("CoachProfileId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("GloryScout.Data.Models.Entities.PlayerProfile", "PlayerProfile")
+                        .WithMany("MediaItems")
+                        .HasForeignKey("PlayerProfileId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("CoachProfile");
+
+                    b.Navigation("PlayerProfile");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
@@ -705,6 +815,16 @@ namespace GloryScout.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("GloryScout.Data.Models.Entities.CoachProfile", b =>
+                {
+                    b.Navigation("MediaItems");
+                });
+
+            modelBuilder.Entity("GloryScout.Data.Models.Entities.PlayerProfile", b =>
+                {
+                    b.Navigation("MediaItems");
                 });
 
             modelBuilder.Entity("GloryScout.Data.Player", b =>

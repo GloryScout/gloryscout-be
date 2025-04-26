@@ -13,5 +13,6 @@ namespace GloryScout.Data.Repository.ScoutRepo
 		Task<Scout> GetWithUserDetailsAsync(Guid scoutId);
 		Task<IEnumerable<Scout>> GetByClubNameAsync(string clubName);
 		Task<IEnumerable<Scout>> GetBySpecializationAsync(string specialization);
-	}
+		Task<IEnumerable<Scout>> GetAllAsync();
+    }
 }

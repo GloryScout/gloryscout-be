@@ -1,4 +1,5 @@
 ﻿using GloryScout.API.Services.PlayerServiceandCoach;
+using GloryScout.Data.Repository.PlayerRepo;
 using GloryScout.DTOs.Player;
 using GloryScout.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -13,11 +14,13 @@ namespace GloryScout.Controllers
     {
         private readonly IPlayerService _playerService;
         private readonly ILogger<PlayerController> _logger;
+        private readonly IPlayerRepo _repo;
 
-        public PlayerController(IPlayerService playerService, ILogger<PlayerController> logger)
+        public PlayerController(IPlayerService playerService, ILogger<PlayerController> logger, IPlayerRepo repo)
         {
             _playerService = playerService;
             _logger = logger;
+            _repo = repo;
         }
 
         // GET: api/player/{username}
@@ -69,6 +72,15 @@ namespace GloryScout.Controllers
                 _logger.LogError(ex, "Error creating player profile");
                 return StatusCode(500, "Internal server error");
             }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Get()
+        {
+            var players = await _repo.GetAllAsync();
+            if (players.Count() == 0)
+                return NotFound("No players found");
+            return Ok(players);
         }
     }
 }

@@ -43,5 +43,11 @@ namespace GloryScout.Data.Repository.PlayerRepo
 				.Where(p => p.Age >= minAge && p.Age <= maxAge)
 				.ToListAsync();
 		}
-	}
+
+        // returns all players 
+        public async Task<IEnumerable<Player>> GetAllAsync()
+        {
+            return await _db.Players.ToListAsync();
+        }
+    }
 }

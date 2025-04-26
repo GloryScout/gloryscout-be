@@ -8,11 +8,45 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace GloryScout.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class WebApiMigration : Migration
+    public partial class CreateBb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "CoachProfiles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Bio = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ProfilePictureUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FollowersCount = table.Column<int>(type: "int", nullable: false),
+                    FollowingCount = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CoachProfiles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PlayerProfiles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Bio = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ProfilePictureUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FollowersCount = table.Column<int>(type: "int", nullable: false),
+                    FollowingCount = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PlayerProfiles", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Roles",
                 columns: table => new
@@ -36,7 +70,8 @@ namespace GloryScout.Data.Migrations
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
                     UserType = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     IsVerified = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
-                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    ProfilePhoto = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -54,6 +89,34 @@ namespace GloryScout.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MediaItems",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Url = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PlayerProfileId = table.Column<int>(type: "int", nullable: true),
+                    CoachProfileId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MediaItems", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MediaItems_CoachProfiles_CoachProfileId",
+                        column: x => x.CoachProfileId,
+                        principalTable: "CoachProfiles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MediaItems_PlayerProfiles_PlayerProfileId",
+                        column: x => x.PlayerProfileId,
+                        principalTable: "PlayerProfiles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -82,14 +145,13 @@ namespace GloryScout.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Age = table.Column<int>(type: "int", nullable: true),
                     Position = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    DominantFoot = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    ProfileDescription = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
-                    Weight = table.Column<int>(type: "int", nullable: false),
-                    Height = table.Column<int>(type: "int", nullable: false),
-                    CurrentTeam = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    DominantFoot = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    Weight = table.Column<float>(type: "real", nullable: true),
+                    Height = table.Column<float>(type: "real", nullable: true),
+                    CurrentTeam = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    ProfileDescription = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -125,14 +187,39 @@ namespace GloryScout.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ResetPasswords",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", maxLength: 450, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    Token = table.Column<string>(type: "nvarchar(max)", maxLength: 5000, nullable: false),
+                    OTP = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    InsertDateTimeUtc = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ResetPasswords", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ResetPasswords_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Scouts",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ClubName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    ProfileDescription = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
-                    ContactDetails = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
-                    Location = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    ClubName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ProfileDescription = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    Specialization = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Experience = table.Column<int>(type: "int", nullable: true),
+                    CurrentClubName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CoachingSpecialty = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -237,7 +324,8 @@ namespace GloryScout.Data.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     IsUsed = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
-                    ExpiresAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Token = table.Column<string>(type: "nvarchar(max)", maxLength: 5000, nullable: false),
+                    CreateadAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Code = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false)
@@ -271,7 +359,7 @@ namespace GloryScout.Data.Migrations
                         column: x => x.PostId,
                         principalTable: "Posts",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Comments_Users_UserId",
                         column: x => x.UserId,
@@ -297,7 +385,7 @@ namespace GloryScout.Data.Migrations
                         column: x => x.PostId,
                         principalTable: "Posts",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Likes_Users_UserId",
                         column: x => x.UserId,
@@ -339,9 +427,9 @@ namespace GloryScout.Data.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { new Guid("5be38547-9a06-47cc-bac5-86fbe6877d4b"), "fa1b0775-8999-4dd3-9567-57ccbfe46761", "Admin", "ADMIN" },
-                    { new Guid("d80ba2fa-395c-4b69-821f-92b6876372fc"), "0ffd89a2-bd29-417c-940a-b6fc10359142", "Scout", "SCOUT" },
-                    { new Guid("dbd47934-fb4a-4bf2-a8c2-cbaecedb4122"), "3ce43c69-40f7-4e54-9775-f9128da98155", "Player", "PLAYER" }
+                    { new Guid("27d0e2e2-40e0-4cf2-8267-19f1ac77d53b"), "27D0E2E2-40E0-4CF2-8267-19F1AC77D53B", "Player", "PLAYER" },
+                    { new Guid("a8d3c1e1-bcc3-4b3e-ab7c-a7f7fbd27231"), "A8D3C1E1-BCC3-4B3E-AB7C-A7F7FBD27231", "Admin", "ADMIN" },
+                    { new Guid("e3f1286b-79d2-46c3-98e4-91f89e10e93d"), "E3F1286B-79D2-46C3-98E4-91F89E10E93D", "Scout", "SCOUT" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -375,6 +463,16 @@ namespace GloryScout.Data.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_MediaItems_CoachProfileId",
+                table: "MediaItems",
+                column: "CoachProfileId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MediaItems_PlayerProfileId",
+                table: "MediaItems",
+                column: "PlayerProfileId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Players_UserId",
                 table: "Players",
                 column: "UserId");
@@ -382,6 +480,11 @@ namespace GloryScout.Data.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Posts_UserId",
                 table: "Posts",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ResetPasswords_UserId",
+                table: "ResetPasswords",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -447,6 +550,12 @@ namespace GloryScout.Data.Migrations
                 name: "Likes");
 
             migrationBuilder.DropTable(
+                name: "MediaItems");
+
+            migrationBuilder.DropTable(
+                name: "ResetPasswords");
+
+            migrationBuilder.DropTable(
                 name: "RoleClaims");
 
             migrationBuilder.DropTable(
@@ -472,6 +581,12 @@ namespace GloryScout.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Posts");
+
+            migrationBuilder.DropTable(
+                name: "CoachProfiles");
+
+            migrationBuilder.DropTable(
+                name: "PlayerProfiles");
 
             migrationBuilder.DropTable(
                 name: "Roles");

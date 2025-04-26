@@ -41,7 +41,7 @@ namespace GloryScout.Data
         // add anything related to on configuatoion iof the db 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Data Source=DESKTOP-8BMN06A;Initial Catalog=GloryScoutDatabase;Integrated Security=True; TrustServerCertificate=True;");
+            optionsBuilder.UseSqlServer("Data Source=DESKTOP-UFQ365U\\SQLEXPRESS;Initial Catalog=GloryScoutDatabase;Integrated Security=True; TrustServerCertificate=True;");
         }
         #endregion
 

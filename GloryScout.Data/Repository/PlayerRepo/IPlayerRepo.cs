@@ -13,6 +13,7 @@ namespace GloryScout.Data.Repository.PlayerRepo
 		Task<Player> GetWithUserDetailsAsync(Guid playerId);
 		Task<IEnumerable<Player>> GetByPositionAsync(string position);
 		Task<IEnumerable<Player>> GetByAgeRangeAsync(int minAge, int maxAge);
+		Task<IEnumerable<Player>> GetAllAsync();
 	}
 }
 
