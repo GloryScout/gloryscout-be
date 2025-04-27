@@ -1,5 +1,5 @@
 ﻿using GloryScout.API.Services;
-//using GloryScout.Domain.Dtos.UserProfileDtos;
+using GloryScout.Domain.Dtos.UserProfileDtos;
 
 
 namespace GloryScout.API.Services.UserProfiles;

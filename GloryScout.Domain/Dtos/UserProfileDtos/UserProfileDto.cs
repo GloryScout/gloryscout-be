@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace GloryScout.Domain;
+namespace GloryScout.Domain.Dtos.UserProfileDtos;
 
 public class UserProfileDto :IDtos
 {
