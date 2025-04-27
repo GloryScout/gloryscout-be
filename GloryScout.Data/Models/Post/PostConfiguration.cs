@@ -21,7 +21,7 @@ namespace GloryScout.Data
 				.IsRequired()
 				.HasDefaultValueSql("GETDATE()");
 
-			builder.Property(p => p.B2UrlKey)
+			builder.Property(p => p.PosrUrl)
 				.IsRequired()
 				.HasMaxLength(255);
 

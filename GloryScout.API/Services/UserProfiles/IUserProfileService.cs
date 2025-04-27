@@ -1,9 +1,9 @@
 ﻿using GloryScout.API.Services;
-using GloryScout.Domain.Dtos.UserProfileDtos;
+//using GloryScout.Domain.Dtos.UserProfileDtos;
 
 
 namespace GloryScout.API.Services.UserProfiles;
-{
+
     public interface IUserProfileService
     {
 
@@ -11,7 +11,7 @@ namespace GloryScout.API.Services.UserProfiles;
         Task<int> GetFollowersCountAsync(Guid id);
         Task FollowUserAsync(Guid followerId, Guid followeeId);
         Task UnfollowUserAsync(Guid followerId, Guid followeeId);
-        Task<PlayerProfileDto> GetProfile(string id);
-        Task<PlayerProfileDto> CreateProfile(user UserProfileDto);
+        //Task<PlayerProfileDto> GetProfile(string id);
+        //Task<PlayerProfileDto> CreateProfile(user UserProfileDto);
     }
-}
+

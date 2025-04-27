@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-using GloryScout.Data.Models.Entities;
-using GloryScout.Domain.Entities;
 
 
 namespace GloryScout.Data
@@ -29,9 +27,6 @@ namespace GloryScout.Data
         public DbSet<Application> Applications => Set<Application>();
         public DbSet<Player> Players => Set<Player>();
         public DbSet<Scout> Scouts => Set<Scout>();
-        public DbSet<PlayerProfile> PlayerProfiles { get; set; }
-        public DbSet<Media> MediaItems { get; set; }
-        public DbSet<CoachProfile> CoachProfiles { get; set; }
 
 
         #endregion
@@ -86,19 +81,6 @@ namespace GloryScout.Data
                 }
             );
 
-            // Configure relationships for PlayerProfile and Media
-            modelBuilder.Entity<PlayerProfile>()
-                .HasMany(p => p.MediaItems)
-                .WithOne(m => m.PlayerProfile)
-                .HasForeignKey(m => m.PlayerProfileId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            // Configure relationships for CoachProfile and Media
-            modelBuilder.Entity<CoachProfile>()
-                .HasMany(c => c.MediaItems)
-                .WithOne(m => m.CoachProfile)
-                .HasForeignKey(m => m.CoachProfileId)
-                .OnDelete(DeleteBehavior.Cascade);
 
             // Change Identity Schema and Table Names
             modelBuilder.Entity<User>().ToTable("Users");

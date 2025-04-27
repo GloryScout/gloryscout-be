@@ -15,22 +15,22 @@ public UserProfileController(IMapper mapper)
     _mapper = mapper;
 }
 
-[HttpGet("{id}")]
-public async Task<IActionResult> GetUserProfile(Guid id)
-{
-    var user = await _userService.GetUserByIdAsync(id);
-    if (user == null)
-    {
-        return NotFound();
-    }
-    var profileDto = new UserProfileDto
-    {
-        Id = user.Id,
-        UserName = user.UserName,
-        ProfileDescription = user.ProfileDescription,
-        Posts = user.Posts.Select(p => p.MediaUrl).ToList(),
-        FollowersCount = await _userService.GetFollowersCountAsync(id)
-    };
-    return Ok(profileDto);
-}
+//[HttpGet("{id}")]
+//public async Task<IActionResult> GetUserProfile(Guid id)
+//{
+//    var user = await _userService.GetUserByIdAsync(id);
+//    if (user == null)
+//    {
+//        return NotFound();
+//    }
+//    var profileDto = new UserProfileDto
+//    {
+//        Id = user.Id,
+//        UserName = user.UserName,
+//        ProfileDescription = user.ProfileDescription,
+//        Posts = user.Posts.Select(p => p.MediaUrl).ToList(),
+//        FollowersCount = await _userService.GetFollowersCountAsync(id)
+//    };
+//    return Ok(profileDto);
+//}
 }
