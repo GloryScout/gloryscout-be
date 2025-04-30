@@ -11,7 +11,6 @@ namespace GloryScout.Data
 	{
 		public Player()
 		{
-			Applications = new HashSet<Application>();
 		}
 		public Guid Id { get; set; }
 		public int? Age { get; set; } 
@@ -20,11 +19,9 @@ namespace GloryScout.Data
 		public float? Weight { get; set; } 
 		public float? Height { get; set; } 
 		public string? CurrentTeam { get; set; }
-		public string? ProfileDescription { get; set; } 
 		public Guid UserId { get; set; }
 
 		// Navigation properties
 		[ForeignKey("UserId")] public virtual User User { get; set; } 
-		public ICollection<Application> Applications { get; set; }
 	}
 }

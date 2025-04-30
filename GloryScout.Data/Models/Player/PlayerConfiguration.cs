@@ -23,8 +23,7 @@ namespace GloryScout.Data
 				.HasMaxLength(20);
 
 
-			builder.Property(p => p.ProfileDescription)
-				.HasMaxLength(1000);
+			
 
 			builder.Property(p => p.CurrentTeam)
 				.HasMaxLength(100);
@@ -35,10 +34,7 @@ namespace GloryScout.Data
 				.HasForeignKey(p => p.UserId)
 				.OnDelete(DeleteBehavior.Restrict);
 
-			builder.HasMany(p => p.Applications)
-				.WithOne(a => a.Player)
-				.HasForeignKey(a => a.PlayerId)
-				.OnDelete(DeleteBehavior.Restrict);
+			
 		}
 	}
 }

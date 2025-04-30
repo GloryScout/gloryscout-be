@@ -14,8 +14,7 @@ namespace GloryScout.Data
 		{
 			builder.HasKey(s => s.Id);
 
-			builder.Property(s => s.ProfileDescription)
-				.HasMaxLength(1000);
+			
 
 
 			// Relationships
@@ -24,10 +23,6 @@ namespace GloryScout.Data
 				.HasForeignKey(s => s.UserId)
 				.OnDelete(DeleteBehavior.Restrict);
 
-			builder.HasMany(s => s.Applications)
-				.WithOne(a => a.Scout)
-				.HasForeignKey(a => a.ScoutId)
-				.OnDelete(DeleteBehavior.Restrict);
 		}
 	}
 }

@@ -25,7 +25,6 @@ namespace GloryScout.Data
         public DbSet<Like> Likes => Set<Like>();
         public DbSet<Comment> Comments => Set<Comment>();
         public DbSet<VerificationCode> VerificationCodes => Set<VerificationCode>();
-        public DbSet<Application> Applications => Set<Application>();
         public DbSet<Player> Players => Set<Player>();
         public DbSet<Scout> Scouts => Set<Scout>();
 		public DbSet<UserFollowings> UserFollowings => Set<UserFollowings>();
@@ -50,7 +49,6 @@ namespace GloryScout.Data
 
             // Apply entity configurations from assemblies
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(UserConfiguration).Assembly);
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationConfiguration).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(PlayerConfiguration).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(PostConfiguration).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(LikeConfiguration).Assembly);

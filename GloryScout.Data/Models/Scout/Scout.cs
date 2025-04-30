@@ -11,11 +11,9 @@ namespace GloryScout.Data
 	{
 		public Scout()
 		{
-			Applications = new HashSet<Application>();
 		}
 		public Guid Id { get; set; }
 		public string? ClubName { get; set; }
-		public string? ProfileDescription { get; set; } // will be in the player profile
 		public string? Specialization { get; set; }
 		public int? Experience { get; set; }
 		public string? CurrentClubName { get; set; }
@@ -24,6 +22,5 @@ namespace GloryScout.Data
 
 		// Navigation properties
 		[ForeignKey("UserId")] public virtual User User { get; set; } 
-		public ICollection<Application> Applications { get; set; }
 	}
 }
