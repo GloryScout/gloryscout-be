@@ -6,7 +6,7 @@ namespace GloryScout.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class usersController : ControllerBase
+public class AuthController : ControllerBase
 {
     private readonly SignInManager<User> _signInManager;
     private readonly UserManager<User> _userManager;
@@ -15,7 +15,7 @@ public class usersController : ControllerBase
     private readonly CloudinaryService _cloudinaryService;
 	
 
-	public usersController(
+	public AuthController(
         SignInManager<User> signInManager,
         UserManager<User> userManager,
         IAuthService authService,
