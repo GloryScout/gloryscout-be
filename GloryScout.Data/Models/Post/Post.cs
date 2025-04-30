@@ -18,7 +18,7 @@ namespace GloryScout.Data
 		public string Description { get; set; }
 		public DateTime CreatedAt { get; set; } = DateTime.Now;
 		public Guid UserId { get; set; }
-		public string B2UrlKey { get; set; }
+		public string PosrUrl { get; set; }
 
 		// Navigation properties
 		[ForeignKey("UserId")] public virtual User User { get; set; } 

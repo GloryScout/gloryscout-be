@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using GloryScout.Data.Models.Followers;
 
 
 namespace GloryScout.Data
@@ -27,14 +28,15 @@ namespace GloryScout.Data
         public DbSet<Application> Applications => Set<Application>();
         public DbSet<Player> Players => Set<Player>();
         public DbSet<Scout> Scouts => Set<Scout>();
+		public DbSet<UserFollowings> UserFollowings => Set<UserFollowings>();
 
 
-        #endregion
+		#endregion
 
         #region OnConfiguration
 
-        // add anything related to on configuatoion iof the db 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+		// add anything related to on configuatoion iof the db 
+		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("Data Source=DESKTOP-8BMN06A;Initial Catalog=GloryScoutDatabase;Integrated Security=True; TrustServerCertificate=True;");
         }
@@ -90,8 +92,25 @@ namespace GloryScout.Data
             modelBuilder.Entity<IdentityUserLogin<Guid>>().ToTable("UserLogins");
             modelBuilder.Entity<IdentityRoleClaim<Guid>>().ToTable("RoleClaims");
             modelBuilder.Entity<IdentityUserToken<Guid>>().ToTable("UserTokens");
-        }
-    }
+
+
+			modelBuilder.Entity<UserFollowings>()
+		.HasKey(uf => new { uf.FollowerId, uf.FolloweeId }); // Composite primary key
+
+			modelBuilder.Entity<UserFollowings>()
+				.HasOne(uf => uf.Follower)
+				.WithMany(u => u.Following)
+				.HasForeignKey(uf => uf.FollowerId)
+				.OnDelete(DeleteBehavior.Restrict); // Prevent cascade deletes
+
+			modelBuilder.Entity<UserFollowings>()
+				.HasOne(uf => uf.Followee)
+				.WithMany(u => u.Followers)
+				.HasForeignKey(uf => uf.FolloweeId)
+				.OnDelete(DeleteBehavior.Restrict); // Prevent cascade deletes
+		}
+	}
+    
 }
         
 #endregion

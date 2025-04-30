@@ -9,5 +9,7 @@ namespace GloryScout.Domain.Profiles
 	public interface IMapperProfile
 	{
 		void CreateMaps(IMapperConfigurationExpression configuration);
-	}
+    }
+
+    
 }

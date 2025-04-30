@@ -175,7 +175,6 @@ public class usersController : ControllerBase
 	/// Step 1: Receive user email and send OTP to email, store OTP in DB
 	/// </summary>
 	[HttpPost("Send-Password-ResetCode")]
-	[AllowAnonymous]
 	public async Task<IActionResult> SendPasswordResetCode([FromBody] SendResetCodeDto dto)
 	{
 		if (string.IsNullOrEmpty(dto.Email))
@@ -191,7 +190,6 @@ public class usersController : ControllerBase
 	/// Step 2: Reset password and verify the OTP
 	/// </summary>
 	[HttpPost("Reset-Password")]
-	[AllowAnonymous]
 	public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto dto)
 	{
 		if (string.IsNullOrEmpty(dto.Email)

@@ -1,7 +1,8 @@
 using System.Reflection;
 using FluentValidation.AspNetCore;
 using GloryScout.API.Services;
-using GloryScout.Data.SeedData;
+using GloryScout.API.Services;
+
 
 
 
@@ -44,9 +45,6 @@ builder.Services.AddControllers()
 		options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 	});
 
-//builder.WebHost
-//	   .UseKestrel()
-//	   .UseUrls("http://0.0.0.0:5000", "https://0.0.0.0:5001");
 
 #endregion
 
@@ -55,23 +53,14 @@ builder.Services.AddControllers()
 var app = builder.Build();
 
 
-//using (var scope = app.Services.CreateScope())
-//{
-//	var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-//	SeedData.Seed(dbContext);
-//}
-
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
 	//app.UseDeveloperExceptionPage();
 	app.UseSwagger();
-	app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Spare Parts v1"));
+	app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "GloryScout v1"));
 }
-app.UseSwagger();
-app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Spare Parts v1"));
-
 
 
 //app.Use(async (context, next) =>
@@ -90,9 +79,6 @@ app.MapControllers();
 
 app.Run();
 
-
-
-//Data Source=DESKTOP-8BMN06A;Initial Catalog=GloryScoutDatabase;Integrated Security=True
 #endregion
 
 #region Program
