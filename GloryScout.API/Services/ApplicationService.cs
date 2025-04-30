@@ -17,6 +17,7 @@ using GloryScout.Data.Repository.UesrRepo;
 using GloryScout.Data.Repository.PlayerRepo;
 using GloryScout.Data.Repository.ScoutRepo;
 using SpareParts.Data;
+using GloryScout.API.Services.UserProfiles;
 
 
 
@@ -106,7 +107,7 @@ public static class ApplicationService
 		services.AddEndpointsApiExplorer();
 		services.AddSwaggerGen(c =>
 		{
-			c.SwaggerDoc("v1", new() { Title = "Spare Parts API", Version = "v1" });
+			c.SwaggerDoc("v1", new() { Title = "Glory scout API", Version = "v1" });
 			var jwtSecurityScheme = new OpenApiSecurityScheme
 			{
 				Scheme = "bearer",
@@ -167,6 +168,12 @@ public static class ApplicationService
 		#region Cloudinary 
 
 		services.AddSingleton<CloudinaryService>();
+
+		#endregion
+
+		#region other services
+
+		services.AddScoped<IUserProfileService, UserProfileService>();
 
 		#endregion
 

@@ -8,6 +8,8 @@ public class UserProfileDto :IDtos
     public string Username{get ; set;}
     public string? ProfileDescription{get;set;}
 
-    public List<string> Posts{get; set;}
+    public ICollection<PostDto> Posts{get; set;}
+
+    public int FollowersCount { get; set; }
 
 }

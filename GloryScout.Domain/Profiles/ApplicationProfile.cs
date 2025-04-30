@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using GloryScout.Data;
 using GloryScout.Domain.Dtos.IdentityDtos;
+using GloryScout.Domain.Dtos.UserProfileDtos;
 
 namespace GloryScout.Domain.Profiles
 {
@@ -86,6 +87,14 @@ namespace GloryScout.Domain.Profiles
 			CreateMap<ResetPasswordDto, User>().ReverseMap();
 				//.ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email));
 				//.ForAllOtherMembers(opt => opt.Ignore());
+
+			CreateMap<ResetPasswordDto, ResetPassword>().ReverseMap();
+			//.ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId));
+			//.ForAllOtherMembers(opt => opt.Ignore());
+
+			CreateMap<UserProfileDto, User>().ReverseMap();
+			CreateMap<PostDto, Post>().ReverseMap();
+			CreateMap<EditProfileDto, User>().ReverseMap();
 		}
 
 		public void CreateMaps(IMapperConfigurationExpression configuration)

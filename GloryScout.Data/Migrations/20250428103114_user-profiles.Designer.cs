@@ -4,6 +4,7 @@ using GloryScout.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GloryScout.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250428103114_user-profiles")]
+    partial class userprofiles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -113,24 +116,6 @@ namespace GloryScout.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Likes");
-                });
-
-            modelBuilder.Entity("GloryScout.Data.Models.Followers.UserFollowings", b =>
-                {
-                    b.Property<Guid>("FollowerId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("FolloweeId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("FollowedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("FollowerId", "FolloweeId");
-
-                    b.HasIndex("FolloweeId");
-
-                    b.ToTable("UserFollowings");
                 });
 
             modelBuilder.Entity("GloryScout.Data.Player", b =>
@@ -623,25 +608,6 @@ namespace GloryScout.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("GloryScout.Data.Models.Followers.UserFollowings", b =>
-                {
-                    b.HasOne("GloryScout.Data.User", "Followee")
-                        .WithMany("Followers")
-                        .HasForeignKey("FolloweeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("GloryScout.Data.User", "Follower")
-                        .WithMany("Following")
-                        .HasForeignKey("FollowerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Followee");
-
-                    b.Navigation("Follower");
-                });
-
             modelBuilder.Entity("GloryScout.Data.Player", b =>
                 {
                     b.HasOne("GloryScout.Data.User", "User")
@@ -768,10 +734,6 @@ namespace GloryScout.Data.Migrations
             modelBuilder.Entity("GloryScout.Data.User", b =>
                 {
                     b.Navigation("Comments");
-
-                    b.Navigation("Followers");
-
-                    b.Navigation("Following");
 
                     b.Navigation("Likes");
 
