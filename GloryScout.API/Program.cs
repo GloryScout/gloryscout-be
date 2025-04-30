@@ -15,9 +15,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 // Registers Application Services , Passes Configuration Settings and Facilitates Dependency Injection
+
 builder.Services.AddApplicationServices(builder.Configuration);
 
-
+builder.Services.AddHttpClient<PaymobService>();
 
 builder.Services.AddCors(options =>
 {
