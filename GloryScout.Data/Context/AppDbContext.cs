@@ -34,10 +34,10 @@ namespace GloryScout.Data
         #region OnConfiguration
 
         // add anything related to on configuatoion iof the db 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer("Data Source=DESKTOP-8BMN06A;Initial Catalog=GloryScoutDatabase;Integrated Security=True; TrustServerCertificate=True;");
-        }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.UseSqlServer("Server=db18305.public.databaseasp.net,1433;Initial Catalog=db18305;User ID=db18305;Password=6Cj-t=A9Hp2_;Encrypt=True;TrustServerCertificate=True;");
+        //}
         #endregion
 
         #region OnModelCreating
