@@ -65,7 +65,23 @@ namespace GloryScout.API.Services.UserProfiles
 
 			return count; // Returns 0 if no followers
 		}
-		
+
+
+		public async Task<int> GetFollowingCountAsync(Guid id)
+		{
+			var userExists = await _context.Users.AnyAsync(u => u.Id == id);
+			if (!userExists)
+			{
+				throw new InvalidOperationException("User not found.");
+			}
+
+			var count = await _context.UserFollowings
+				.CountAsync(uf => uf.FollowerId == id);
+
+			return count;
+		}
+
+
 
 		public async Task<User> GetUserByIdAsync(Guid id)
 		{
@@ -92,6 +108,7 @@ namespace GloryScout.API.Services.UserProfiles
 				{
 					Id = user.Id,
 					Username = user.UserName,
+					ProfilePhoto = user.ProfilePhoto,
 					ProfileDescription = user.ProfileDescription,
 					Posts = user.Posts.Select(p => new PostDto
 					{
@@ -99,7 +116,8 @@ namespace GloryScout.API.Services.UserProfiles
 						Description=p.Description,
 						PosrUrl = p.PosrUrl
 					}).ToList(),
-					FollowersCount = await GetFollowersCountAsync(user.Id)
+					FollowersCount = await GetFollowersCountAsync(user.Id),
+					FollowingCount = await GetFollowingCountAsync(user.Id)
 
 				};
 				profile = _mapper.Map<UserProfileDto>(Profile);

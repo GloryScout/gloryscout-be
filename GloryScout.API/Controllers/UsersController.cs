@@ -1,6 +1,9 @@
 ﻿using GloryScout.API.Services.Auth;
 using GloryScout.Domain.Dtos.IdentityDtos;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
 
 namespace GloryScout.API.Controllers;
 
@@ -8,28 +11,28 @@ namespace GloryScout.API.Controllers;
 [ApiController]
 public class AuthController : ControllerBase
 {
-    private readonly SignInManager<User> _signInManager;
-    private readonly UserManager<User> _userManager;
-    private readonly IAuthService _authService;
-    private readonly IMapper _mapper;
-    private readonly CloudinaryService _cloudinaryService;
-	
+	private readonly SignInManager<User> _signInManager;
+	private readonly UserManager<User> _userManager;
+	private readonly IAuthService _authService;
+	private readonly IMapper _mapper;
+	private readonly CloudinaryService _cloudinaryService;
+
 
 	public AuthController(
-        SignInManager<User> signInManager,
-        UserManager<User> userManager,
-        IAuthService authService,
-        IMapper mapper,
+		SignInManager<User> signInManager,
+		UserManager<User> userManager,
+		IAuthService authService,
+		IMapper mapper,
 		CloudinaryService Cloudinary
-
 		)
-    {
-        _userManager = userManager;
-        _signInManager = signInManager;
-        _authService = authService;
-        _mapper = mapper;
-        _cloudinaryService = Cloudinary;
-    }
+	{
+		_userManager = userManager;
+		_signInManager = signInManager;
+		_authService = authService;
+		_mapper = mapper;
+		_cloudinaryService = Cloudinary;
+	}
+
 	[HttpPost("register-coach")]
 	public async Task<IActionResult> RegisterCoachAsync([FromForm] CoachRegisterDto dto, IFormFile profilePhoto)
 	{
@@ -43,7 +46,6 @@ public class AuthController : ControllerBase
 
 		return Ok(result);
 	}
-
 
 	[HttpPost("register-player")]
 	public async Task<IActionResult> RegisterPlayerAsync([FromForm] PlayerRegisterDto dto, IFormFile profilePhoto)
@@ -59,122 +61,89 @@ public class AuthController : ControllerBase
 		return Ok(result);
 	}
 
+	[HttpPost("login")]
+	public async Task<IActionResult> GetTokenAsync([FromBody] LoginDto model)
+	{
+		if (!ModelState.IsValid)
+			return BadRequest(ModelState);
 
+		var result = await _authService.LoginAsync(model);
 
-	[HttpPost("login")] 
-    public async Task<IActionResult> GetTokenAsync([FromBody] LoginDto model)
-    {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
+		if (!result.IsAuthenticated)
+			return BadRequest(result.Message);
 
-        var result = await _authService.LoginAsync(model);
+		return Ok(result);
+	}
 
-        if (!result.IsAuthenticated)
-            return BadRequest(result.Message);
+	[HttpGet("user-info")]
+	[Authorize]
+	public async Task<ActionResult<object>> GetUserInfo()
+	{
+		var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+		if (string.IsNullOrEmpty(userId))
+		{
+			return Unauthorized();
+		}
 
-        return Ok(result);
-    }
-    
-    //[HttpGet]
-    //[Authorize(Policy = "Admin")]
-    //public async Task<ActionResult<IEnumerable<UserDto>>> GetAll()
-    //{
-    //    var modelItems = await _userManager.Users.ToListAsync();
-    //    IEnumerable<UserDto> result = _mapper.Map<IEnumerable<UserDto>>(modelItems);
-    //    foreach (var userDto in result.Select((value, i) => new { i, value }))
-    //    {
-    //       userDto.value.Role = (await _userManager.GetClaimsAsync(modelItems[userDto.i])).FirstOrDefault(c=>c.Type==ClaimTypes.Role)!.Value;
-    //    }
-    //    return Ok(result);
-    //}
+		var user = await _userManager.FindByIdAsync(userId);
+		if (user == null)
+		{
+			return NotFound();
+		}
 
-    //[HttpGet("id")]
-    //public async Task<ActionResult<UserDto>> GetById(Guid id)
-    //{
-    //    var modelItem = await _userManager.FindByIdAsync(id.ToString());
-    //    UserDto result = _mapper.Map<UserDto>(modelItem);
-    //    result.Role = (await _userManager.GetClaimsAsync(modelItem!)).FirstOrDefault(c => c.Type == ClaimTypes.Role)!.Value;
-    //    return Ok(result);
-    //}
+		var role = User.FindFirstValue(ClaimTypes.Role);
 
-    //[HttpGet("own-info")]
-    //[Authorize]
-    //public async Task<ActionResult<UserDto>> GetOwnInfo()
-    //{
-    //    var currentUser = await _userManager.GetUserAsync(User);
-    //    var modelItem = await _userManager.FindByIdAsync(currentUser!.Id.ToString());
-    //    UserDto result = _mapper.Map<UserDto>(modelItem);
-    //    result.Role = (await _userManager.GetClaimsAsync(modelItem!)).FirstOrDefault(c => c.Type == ClaimTypes.Role)!.Value;
-    //    return Ok(result);
-    //}
+		var userInfo = new
+		{
+			Id = user.Id,
+			UserName = user.UserName,
+			Email = user.Email,
+			PhoneNumber = user.PhoneNumber,
+			UserType = user.UserType,
+			ProfilePhoto = user.ProfilePhoto,
+			ProfileDescription = user.ProfileDescription,
+			Role = role
+		};
 
-    //[HttpPut]
-    //public async Task<ActionResult> UpdateAsync(Guid id, UpdateUserDto dto)
-    //{
-    //    if (id != dto.Id)
-    //    {
-    //        return BadRequest("Id not matched");
-    //    }
+		return Ok(userInfo);
+	}
 
-    //    if (!ModelState.IsValid)
-    //        return BadRequest(ModelState);
+	[HttpPost("change-password")]
+	[Authorize]
+	public async Task<IActionResult> ChangePasswordAsync(ChangePasswordDto dto)
+	{
+		if (!ModelState.IsValid)
+			return BadRequest(ModelState);
 
-    //    var result = await _authService.UpdateUserAsync(dto);
+		var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+		if (string.IsNullOrEmpty(userId))
+		{
+			return Unauthorized();
+		}
 
-    //    if (!result.IsAuthenticated)
-    //        return BadRequest(result.Message);
+		// Update the DTO with the user ID from the token
+		dto.Id = Guid.Parse(userId);
 
-    //    return Ok(result);
-    //}
+		var result = await _authService.ChangePasswordAsync(dto);
 
-    //[HttpPost("change-password")]
-    //public async Task<IActionResult> ChangePasswordAsync(ChangePasswordDto dto)
-    //{
-    //    if (!ModelState.IsValid)
-    //        return BadRequest(ModelState);
+		if (!result.IsAuthenticated)
+			return BadRequest(result.Message);
 
-    //    var result = await _authService.ChangePasswordAsync(dto);
+		return Ok(result);
+	}
 
-    //    if (!result.IsAuthenticated)
-    //        return BadRequest(result.Message);
+	[HttpPost("logout")]
+	[Authorize]
+	public async Task<IActionResult> Logout()
+	{
+		await _signInManager.SignOutAsync();
+		return Ok("Logout success!");
+	}
 
-    //    return Ok(result);
-    //}
-    
-    //[HttpDelete]
-    //[Authorize(Policy = "Admin")]
-    //public async Task<IActionResult> DeleteUser(Guid userId)
-    //{
-    //    var user = await _userManager.FindByIdAsync(userId.ToString());
-
-    //    if (user == null)
-    //        return NotFound();
-
-    //    var result = await _userManager.DeleteAsync(user);
-
-    //    if (!result.Succeeded)
-    //        return BadRequest("Not Deleted");
-
-    //    return Ok();
-    //}
-
-    //[HttpPost]
-    //[Route("logout")]
-    //[Authorize]
-    //public async Task<IActionResult> Logout()
-    //{
-    //    await _signInManager.SignOutAsync();
-    //    return Ok("Logout success!");
-    //}
-
-    
-
-
-    
 	/// <summary>
 	/// Step 1: Receive user email and send OTP to email, store OTP in DB
 	/// </summary>
-	[HttpPost("Send-Password-ResetCode")]
+	[HttpPost("send-password-reset-code")]
 	public async Task<IActionResult> SendPasswordResetCode([FromBody] SendResetCodeDto dto)
 	{
 		if (string.IsNullOrEmpty(dto.Email))
@@ -184,12 +153,10 @@ public class AuthController : ControllerBase
 		return Ok("OTP sent successfully");
 	}
 
-	
-
 	/// <summary>
 	/// Step 2: Reset password and verify the OTP
 	/// </summary>
-	[HttpPost("Reset-Password")]
+	[HttpPost("reset-password")]
 	public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto dto)
 	{
 		if (string.IsNullOrEmpty(dto.Email)

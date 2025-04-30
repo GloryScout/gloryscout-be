@@ -12,7 +12,7 @@ namespace GloryScout.Domain
             NewPassword = newPassword;
         }
 
-        public Guid Id { get;}
+        public Guid Id { get; set; }
 
         [Required, StringLength(256)]
         public string Password { get; }

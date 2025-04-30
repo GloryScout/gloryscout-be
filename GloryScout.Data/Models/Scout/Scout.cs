@@ -13,7 +13,6 @@ namespace GloryScout.Data
 		{
 		}
 		public Guid Id { get; set; }
-		public string? ClubName { get; set; }
 		public string? Specialization { get; set; }
 		public int? Experience { get; set; }
 		public string? CurrentClubName { get; set; }

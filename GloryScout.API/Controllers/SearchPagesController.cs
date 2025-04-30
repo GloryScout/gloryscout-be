@@ -6,11 +6,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace GloryScout.API.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
+	[Authorize]
 	public class SearchPagesController : ControllerBase
 	{
 		private readonly AppDbContext _context;
@@ -90,7 +93,6 @@ namespace GloryScout.API.Controllers
 				{
 					id = s.Id,
 					userName = s.User.UserName,
-					clubName = s.ClubName,
 					profileDescription = s.User.ProfileDescription,
 					specialization = s.Specialization,
 					experience = s.Experience,
@@ -117,7 +119,6 @@ namespace GloryScout.API.Controllers
 				{
 					id = s.Id,
 					userName = s.User.UserName,
-					clubName = s.ClubName,
 					profileDescription = s.User.ProfileDescription,
 					specialization = s.Specialization,
 					experience = s.Experience,
@@ -127,7 +128,7 @@ namespace GloryScout.API.Controllers
 					nationality = s.User.Nationality,
 					userType = s.User.UserType,
 					profilePhoto = s.User.ProfilePhoto,
-					
+
 				})
 				.FirstOrDefaultAsync();
 

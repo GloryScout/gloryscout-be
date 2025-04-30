@@ -32,7 +32,7 @@ namespace GloryScout.Data.Repository.ScoutRepo
 		{
 			return await _db.Set<Scout>()
 				.Include(s => s.User)
-				.Where(s => s.ClubName == clubName)
+				.Where(s => s.CurrentClubName == clubName)
 				.ToListAsync();
 		}
 

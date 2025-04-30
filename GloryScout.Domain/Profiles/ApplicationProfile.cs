@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using GloryScout.Data;
 using GloryScout.Domain.Dtos.IdentityDtos;
+using GloryScout.Domain.Dtos.UserProfileDtos;
 
 namespace GloryScout.Domain.Profiles
 {
@@ -57,7 +58,7 @@ namespace GloryScout.Domain.Profiles
 				.ForMember(dest => dest.Id, opt => opt.Ignore())
 				.ForMember(dest => dest.User, opt => opt.Ignore())
 				.ForMember(dest => dest.UserId, opt => opt.Ignore())
-				.ForMember(dest => dest.ClubName, opt => opt.MapFrom(src => src.CurrentClubName));
+				.ForMember(dest => dest.CurrentClubName, opt => opt.MapFrom(src => src.CurrentClubName));
 
 			// Authentication mappings
 			CreateMap<User, AuthDto>()
@@ -80,8 +81,13 @@ namespace GloryScout.Domain.Profiles
 			////.ForAllOtherMembers(opt => opt.Ignore());
 
 			CreateMap<ResetPasswordDto, User>().ReverseMap();
-				//.ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email));
-				//.ForAllOtherMembers(opt => opt.Ignore());
+			//.ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email));
+			//.ForAllOtherMembers(opt => opt.Ignore());
+
+			CreateMap<PostDto, Post>()
+			// if your DTO has a typo or different name, remap it:
+			.ForMember(dest => dest.PosrUrl, opt => opt.MapFrom(src => src.PosrUrl))
+			.ReverseMap();
 		}
 
 		public void CreateMaps(IMapperConfigurationExpression configuration)
