@@ -19,6 +19,7 @@ using GloryScout.Data.Repository.ScoutRepo;
 using SpareParts.Data;
 using GloryScout.API.Services.UserProfiles;
 using GloryScout.API.Services.Posts;
+using GloryScout.API.SwaggerSchemas;
 
 
 
@@ -109,6 +110,7 @@ public static class ApplicationService
 		services.AddSwaggerGen(c =>
 		{
 			c.SwaggerDoc("v1", new() { Title = "Glory scout API", Version = "v1" });
+			c.DocumentFilter<AddSchemaDocumentFilter>();
 			var jwtSecurityScheme = new OpenApiSecurityScheme
 			{
 				Scheme = "bearer",

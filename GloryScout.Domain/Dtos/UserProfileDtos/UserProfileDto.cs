@@ -4,7 +4,11 @@ namespace GloryScout.Domain.Dtos.UserProfileDtos;
 
 public class UserProfileDto :IDtos
 {
-    public Guid Id {get; set;}
+	public UserProfileDto()
+	{
+		
+	}
+	public Guid Id {get; set;}
     public string Username{get ; set;}
     public string? ProfilePhoto { get; set; }
 	public string? ProfileDescription{get;set;}
