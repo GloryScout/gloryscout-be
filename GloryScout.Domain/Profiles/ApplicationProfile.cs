@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using GloryScout.Data;
+using GloryScout.Domain.Dtos.HomePageDtos;
 using GloryScout.Domain.Dtos.IdentityDtos;
 using GloryScout.Domain.Dtos.UserProfileDtos;
 
@@ -88,6 +89,22 @@ namespace GloryScout.Domain.Profiles
 			// if your DTO has a typo or different name, remap it:
 			.ForMember(dest => dest.PosrUrl, opt => opt.MapFrom(src => src.PosrUrl))
 			.ReverseMap();
+
+			CreateMap<Post, FeedPostsDto>().ReverseMap();
+
+			CreateMap<HomeUserDto, User>().ReverseMap();
+			CreateMap<FeedPostsDto, Post>()
+				.ForMember(dest => dest.PosrUrl, opt => opt.MapFrom(src => src.PosrUrl))
+				.ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
+				.ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt))
+				.ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
+				.ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+				.ForMember(dest => dest.User, opt => opt.Ignore())
+				.ForMember(dest => dest.Likes, opt => opt.Ignore())
+				.ForMember(dest => dest.Comments, opt => opt.Ignore())
+				.ReverseMap();
+
+	
 		}
 
 		public void CreateMaps(IMapperConfigurationExpression configuration)

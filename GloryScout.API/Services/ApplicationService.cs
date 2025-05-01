@@ -18,6 +18,7 @@ using GloryScout.Data.Repository.PlayerRepo;
 using GloryScout.Data.Repository.ScoutRepo;
 using SpareParts.Data;
 using GloryScout.API.Services.UserProfiles;
+using GloryScout.API.Services.Posts;
 
 
 
@@ -174,6 +175,7 @@ public static class ApplicationService
 		#region other services
 
 		services.AddScoped<IUserProfileService, UserProfileService>();
+		services.AddScoped<IPostServices, PostServices>();
 
 		#endregion
 

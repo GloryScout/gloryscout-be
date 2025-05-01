@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using GloryScout.Data.Models.Followers;
+using Microsoft.Extensions.Configuration;
 
 
 namespace GloryScout.Data
@@ -8,6 +9,8 @@ namespace GloryScout.Data
     public class AppDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid, IdentityUserClaim<Guid>, IdentityUserRole<Guid>, IdentityUserLogin<Guid>, IdentityRoleClaim<Guid>, IdentityUserToken<Guid>>
     {
         #region constructors
+
+        private readonly IConfiguration _config;
         public AppDbContext()
         {
         }
@@ -20,6 +23,7 @@ namespace GloryScout.Data
         #region DbSet
 
         public override DbSet<User> Users => Set<User>();
+
         public virtual DbSet<ResetPassword> ResetPasswords => Set<ResetPassword>();
         public DbSet<Post> Posts => Set<Post>();
         public DbSet<Like> Likes => Set<Like>();

@@ -43,18 +43,7 @@ public class UserProfileController : ControllerBase
 		return Ok(profileDto);
 	}
 
-	[HttpGet("get-profile/{id}")]
-	public async Task<IActionResult> GetUserProfileById(Guid id)
-	{
-		var user = await _userProfileService.GetUserByIdAsync(id);
-		if (user == null)
-		{
-			return NotFound();
-		}
-
-		var profileDto = await _userProfileService.GetProfileasync(id.ToString());
-		return Ok(profileDto);
-	}
+	
 
 	[HttpPost("follow/{followeeId}")]
 	public async Task<IActionResult> FollowUser(Guid followeeId)
@@ -236,10 +225,10 @@ public class UserProfileController : ControllerBase
 			}
 
 			// Override any user ID in the DTO with the one from the token
-			dto.UserId = Guid.Parse(userId);
+			var UserId = Guid.Parse(userId);
 
 			// Await the task to get the actual User object
-			var user = await _userProfileService.GetUserByIdAsync(dto.UserId);
+			var user = await _userProfileService.GetUserByIdAsync(UserId);
 
 			if (user == null)
 			{
@@ -264,7 +253,7 @@ public class UserProfileController : ControllerBase
 			}
 
 			// Update the user profile in the database with the new description and photo URL (if updated)
-			await _userProfileService.UpdateProfileAsync(dto.UserId, dto.ProfileDescription, newProfilePhotoUrl);
+			await _userProfileService.UpdateProfileAsync(UserId , dto.ProfileDescription, newProfilePhotoUrl);
 			return Ok(new { Message = "Profile updated successfully." });
 		}
 		catch (Exception ex)

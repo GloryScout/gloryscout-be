@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using GloryScout.API.Services.UserProfiles;
 
 namespace GloryScout.API.Controllers
 {
@@ -17,10 +18,13 @@ namespace GloryScout.API.Controllers
 	public class SearchPagesController : ControllerBase
 	{
 		private readonly AppDbContext _context;
+		private readonly IUserProfileService _userProfileService;
 
-		public SearchPagesController(AppDbContext context)
+
+		public SearchPagesController(AppDbContext context , IUserProfileService userProfileService)
 		{
 			_context = context;
+			_userProfileService = userProfileService;
 		}
 
 		// GET: api/SearchPages/players
@@ -139,5 +143,20 @@ namespace GloryScout.API.Controllers
 
 			return Ok(scout);
 		}
+
+
+		[HttpGet("get-profile/{id}")]
+		public async Task<IActionResult> GetUserProfileById(Guid id)
+		{
+			var user = await _userProfileService.GetUserByIdAsync(id);
+			if (user == null)
+			{
+				return NotFound();
+			}
+
+			var profileDto = await _userProfileService.GetProfileasync(id.ToString());
+			return Ok(profileDto);
+		}
+
 	}
 }
