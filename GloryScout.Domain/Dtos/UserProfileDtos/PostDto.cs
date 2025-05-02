@@ -9,6 +9,7 @@ namespace GloryScout.Domain.Dtos.UserProfileDtos
     public class PostDto: IDtos
 	{
 		public Guid Id { get; set; }
+		public Guid UserId { get; set; }
 		public string? Description { get; set; }
 		public string? PosrUrl { get; set; }
 	}

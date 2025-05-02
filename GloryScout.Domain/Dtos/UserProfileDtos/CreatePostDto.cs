@@ -8,7 +8,6 @@ namespace GloryScout.Domain.Dtos.UserProfileDtos
 {
     public class CreatePostDto
     {
-		public Guid UserId { get; set; }
 		public string? Description { get; set; }
 	}
 }

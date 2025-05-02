@@ -104,8 +104,6 @@ public class UserProfileController : ControllerBase
 			return Unauthorized();
 		}
 
-		// Override any user ID in the DTO with the one from the token
-		dto.UserId = Guid.Parse(userId);
 
 		if (!ModelState.IsValid)
 		{
@@ -139,12 +137,13 @@ public class UserProfileController : ControllerBase
 			var postDto = new PostDto
 			{
 				Id = postId,
+				UserId = Guid.Parse(userId),
 				Description = dto.Description,
 				PosrUrl = postUrl
 			};
 
 			var post = _mapper.Map<Post>(postDto);
-			await _userProfileService.CreatePostAsync(post.Id, dto.UserId, post.Description, post.PosrUrl);
+			await _userProfileService.CreatePostAsync(post.Id, Guid.Parse(userId), post.Description, post.PosrUrl);
 
 			return Ok(new { Message = "Post created successfully.", PostId = postId });
 		}
