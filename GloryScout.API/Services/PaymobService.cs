@@ -1,4 +1,5 @@
 ﻿using GloryScout.Data.Models.payment;
+using static YourNamespace.Controllers.PaymentController;
 
 public class PaymobService
 {
@@ -37,35 +38,39 @@ public class PaymobService
         return result.Id;
     }
 
-    public async Task<string> GetPaymentKeyAsync(string token, int amountCents, int orderId)
-    {
-        var response = await _http.PostAsJsonAsync("https://accept.paymob.com/api/acceptance/payment_keys", new
-        {
-            auth_token = token,
-            amount_cents = amountCents.ToString(),
-            expiration = 3600,
-            order_id = orderId,
-            billing_data = new
-            {
-                apartment = "803",
-                email = "user@example.com",
-                floor = "42",
-                first_name = "Mohamed",
-                street = "Example Street",
-                building = "8028",
-                phone_number = "+201000000000",
-                shipping_method = "PKG",
-                postal_code = "01898",
-                city = "Cairo",
-                country = "EG",
-                last_name = "Sayed",
-                state = "CA"
-            },
-            currency = "EGP",
-            integration_id = int.Parse(_config["Paymob:IntegrationId"])
-        });
+	public async Task<string> GetPaymentKeyAsync(string token, int amountCents, int orderId, BillingData billingData)
+	{
+		try
+		{
+			var response = await _http.PostAsJsonAsync(
+				"https://accept.paymob.com/api/acceptance/payment_keys",
+				new
+				{
+					auth_token = token,
+					amount_cents = amountCents,
+					expiration = 3600,
+					order_id = orderId,
+					billing_data = billingData,
+					currency = "EGP",
+					integration_id = int.Parse(_config["Paymob:IntegrationId"])
+				});
 
-        var result = await response.Content.ReadFromJsonAsync<PaymentKeyResponse>();
-        return result.Token;
-    }
+			// Add response validation
+			if (!response.IsSuccessStatusCode)
+			{
+				var errorContent = await response.Content.ReadAsStringAsync();
+				throw new Exception($"Paymob API Error: {response.StatusCode} - {errorContent}");
+			}
+
+			var result = await response.Content.ReadFromJsonAsync<PaymentKeyResponse>();
+			return result?.Token ?? throw new Exception("No token received from Paymob");
+		}
+		catch (Exception ex)
+		{
+			// Add proper logging here
+			Console.WriteLine($"Payment key error: {ex}");
+			throw;
+		}
+	}
+
 }
