@@ -4,11 +4,8 @@ namespace GloryScout.API.Services.Posts
 {
 	public interface IPostServices
 	{
-		Task<List<Post>> GetLatestFeedAsync(int count);
 
-		Task<FeedResult> GetFeedAsync(Guid userId, DateTime? lastCursor, int limit);
-
-		// Returns a DTO containing new like info for UI updates
+		Task<FeedResult> GetFeedAsync(Guid currentUserId, FeedCursor lastCursor, int limit);
 		Task<Like> LikePostAsync(Guid postId, Guid userId);
 
 		Task UnlikePostAsync(Guid postId, Guid userId);

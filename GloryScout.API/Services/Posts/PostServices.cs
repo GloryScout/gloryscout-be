@@ -20,12 +20,11 @@ namespace GloryScout.API.Services.Posts
 		public class FeedResult
 		{
 			public List<FeedPostsDto> Posts { get; set; } = new List<FeedPostsDto>();
-			public DateTime? NextCursor { get; set; }
 			public bool HasMore { get; set; }
+			public FeedCursor NextCursor { get; set; }
 		}
 
 
-		#region necessary Dtos
 		public class PostDetailDto
 		{
 			public Guid Id { get; set; }
@@ -51,125 +50,83 @@ namespace GloryScout.API.Services.Posts
 			public string Username { get; set; }
 			public string ProfilePhoto { get; set; }
 		}
-#endregion
+		
 
-
-		/// <summary>
-		/// Retrieves the most recent posts across the whole system,
-		/// sorted by CreatedAt descending.
-		/// </summary>
-		public async Task<List<Post>> GetLatestFeedAsync(int count)
+		public class FeedCursor
 		{
-			return await _context.Posts
-				.Include(p => p.User)
-				.OrderByDescending(p => p.CreatedAt)
-				.Take(count)
-				.ToListAsync();
+			public int LastLikesCount { get; set; }
+			public DateTime LastCreatedAt { get; set; }
 		}
 
 		/// <summary>
-		/// Retrieves the next chunk of the user's feed using cursor-based pagination.
-		/// On the first load (no cursor), it returns the top global posts (up to GlobalSlotCount)
-		/// plus followee posts to fill the remaining slots. On subsequent loads (cursor provided),
-		/// it returns followee posts older than the cursor timestamp, excluding any already sent.
+		/// Infinite-scroll feed, across the whole system, ordered first by LikesCount DESC,
+		/// then by CreatedAt DESC. Cursor is two-part (likes, date).
 		/// </summary>
-		/// <param name="userId">Authenticated user's ID.</param>
-		/// <param name="lastCursor">Timestamp of the last-seen post (null for first load).</param>
-		/// <param name="limit">Maximum number of posts to return.</param>
-		public async Task<FeedResult> GetFeedAsync(Guid userId, DateTime? lastCursor, int limit)
+		/// <param name="lastCursor">If null, returns the top N posts. Otherwise returns the next page.</param>
+		/// <param name="limit">Number of posts per “page.”</param>
+		public async Task<FeedResult> GetFeedAsync(Guid currentUserId , FeedCursor lastCursor, int limit)
 		{
-			if (limit < 1)
-				throw new ArgumentException("Limit must be >= 1.");
+			if (limit < 1) throw new ArgumentException("limit must be ≥ 1");
 
-			var result = new FeedResult();
-			int remaining = limit;
-			var sentGlobalIds = new List<Guid>();
-
-			// First load: include global posts
-			if (!lastCursor.HasValue)
-			{
-				var globalPosts = await GetLatestFeedAsync(GlobalSlotCount);
-				var globalPostDtos = await _context.Posts
-					.Include(p => p.User)
-					.Include(p => p.Likes)
-					.Include(p => p.Comments)
-					.OrderByDescending(p => p.CreatedAt)
-					.Take(GlobalSlotCount)
-					.Select(p => new FeedPostsDto
-					{
-						Id = p.Id,
-						Description = p.Description,
-						PosrUrl = p.PosrUrl,
-						UserId= p.UserId,
-						CreatedAt = p.CreatedAt,
-						Username = p.User.UserName,
-						UserProfilePicture = p.User.ProfilePhoto,
-						LikesCount = p.Likes.Count,
-						CommentsCount = p.Comments.Count,
-						IsLikedByCurrentUser = p.Likes.Any(l => l.UserId == userId)
-					})
-					.ToListAsync();
-				result.Posts.AddRange(globalPostDtos);
-				sentGlobalIds = globalPosts.Select(p => p.Id).ToList();
-				remaining -= globalPosts.Count;
-			}
-
-			// Build followee query, excluding already sent global posts
-			IQueryable<Post> followeeQuery = _context.Posts
+			// Base query projects into DTO so we can sort/filter on LikesCount.
+			var baseQuery = _context.Posts
 				.Include(p => p.User)
-				.Where(p =>
-					_context.UserFollowings
-						.Any(uf => uf.FollowerId == userId && uf.FolloweeId == p.UserId)
-					&& !sentGlobalIds.Contains(p.Id)
-				)
-				.OrderByDescending(p => p.CreatedAt);
+				.Include(p => p.Likes)
+				.Include(p => p.Comments)
+				.Select(p => new FeedPostsDto
+				{
+					Id = p.Id,
+					Description = p.Description,
+					PosrUrl = p.PosrUrl,
+					CreatedAt = p.CreatedAt,
+					UserId = p.UserId,
+					Username = p.User.UserName,
+					UserProfilePicture = p.User.ProfilePhoto,
+					LikesCount = p.Likes.Count,
+					CommentsCount = p.Comments.Count,
+					IsLikedByCurrentUser = p.Likes.Any(l => l.UserId == currentUserId)
+				});
 
-			if (lastCursor.HasValue)
+			// Apply cursor-based filtering: (Likes < lastLikes)
+			// OR (Likes == lastLikes AND CreatedAt < lastCreatedAt)
+			if (lastCursor != null)
 			{
-				followeeQuery = followeeQuery
-					.Where(p => p.CreatedAt < lastCursor.Value);
-			}
-			
-			List<FeedPostsDto> followeePostDtos = null;
-
-			if (remaining > 0)
-			{
-				var followeePosts = await followeeQuery
-					.Take(remaining)
-					.ToListAsync();
-				followeePostDtos = await followeeQuery
-					.Include(p => p.Likes)
-					.Include(p => p.Comments)
-					.Take(remaining)
-					.Select(p => new FeedPostsDto
-					{
-						Id = p.Id,
-						Description = p.Description,
-						PosrUrl = p.PosrUrl,
-						CreatedAt = p.CreatedAt,
-						UserId = p.UserId,
-						Username = p.User.UserName,
-						UserProfilePicture = p.User.ProfilePhoto,
-						LikesCount = p.Likes.Count,
-						CommentsCount = p.Comments.Count,
-						IsLikedByCurrentUser = p.Likes.Any(l => l.UserId == userId)
-					})
-					.ToListAsync();
-				result.Posts.AddRange(followeePostDtos);
+				baseQuery = baseQuery.Where(p =>
+					p.LikesCount < lastCursor.LastLikesCount
+					|| (p.LikesCount == lastCursor.LastLikesCount && p.CreatedAt < lastCursor.LastCreatedAt)
+				);
 			}
 
-			if (result.Posts.Any())
+			// Order by likes DESC, then date DESC
+			var ordered = baseQuery
+				.OrderByDescending(p => p.LikesCount)
+				.ThenByDescending(p => p.CreatedAt);
+
+			// Pull one extra to see if there's more
+			var pagePlusOne = await ordered
+				.Take(limit + 1)
+				.ToListAsync();
+
+			var result = new FeedResult	();
+			result.HasMore = pagePlusOne.Count > limit;
+
+			// Trim to the requested page
+			var page = pagePlusOne.Take(limit).ToList();
+			result.Posts.AddRange(page);
+
+			if (page.Any())
 			{
-				result.NextCursor = result.Posts.Last().CreatedAt;
-				result.HasMore = result.Posts.Count >= limit;
-			}
-			else
-			{
-				result.HasMore = false;
+				var last = page.Last();
+				result.NextCursor = new FeedCursor
+				{
+					LastLikesCount = last.LikesCount,
+					LastCreatedAt = last.CreatedAt
+				};
 			}
 
 			return result;
 		}
+
 
 
 
