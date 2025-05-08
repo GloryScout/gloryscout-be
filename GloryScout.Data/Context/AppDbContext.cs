@@ -1,27 +1,26 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-using GloryScout.Data.Models.Followers;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-
+using GloryScout.Data.Models.Followers;
+using GloryScout.Data.Models;
+using GloryScout.Data.Models.Payment;
 
 namespace GloryScout.Data
 {
-    public class AppDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid, IdentityUserClaim<Guid>, IdentityUserRole<Guid>, IdentityUserLogin<Guid>, IdentityRoleClaim<Guid>, IdentityUserToken<Guid>>
+    public class AppDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid,
+        IdentityUserClaim<Guid>, IdentityUserRole<Guid>, IdentityUserLogin<Guid>,
+        IdentityRoleClaim<Guid>, IdentityUserToken<Guid>>
     {
-        #region constructors
-
         private readonly IConfiguration _config;
-        public AppDbContext()
-        {
-        }
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-        {
-        }
 
+        #region constructors
+        public AppDbContext() { }
+
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
         #endregion
 
         #region DbSet
-
         public override DbSet<User> Users => Set<User>();
 
         public virtual DbSet<ResetPassword> ResetPasswords => Set<ResetPassword>();
@@ -31,22 +30,28 @@ namespace GloryScout.Data
         public DbSet<VerificationCode> VerificationCodes => Set<VerificationCode>();
         public DbSet<Player> Players => Set<Player>();
         public DbSet<Scout> Scouts => Set<Scout>();
-		public DbSet<UserFollowings> UserFollowings => Set<UserFollowings>();
+        public DbSet<UserFollowings> UserFollowings => Set<UserFollowings>();
+        public DbSet<OrderResponse> OrderResponses => Set<OrderResponse>();
+        public DbSet<PaymobCallbackResponse> PaymobCallbackResponses => Set<PaymobCallbackResponse>();
+       
 
 
-		#endregion
+        #endregion
 
         #region OnConfiguration
-
-		// add anything related to on configuatoion iof the db 
-		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Data Source=DESKTOP-8BMN06A;Initial Catalog=GloryScoutDatabase;Integrated Security=True; TrustServerCertificate=True;");
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer(
+                    "Data Source=MUHMD;Initial Catalog=GloryScoutDatabase;Integrated Security=True;TrustServerCertificate=True;",
+                    options => options.MigrationsAssembly("GloryScout.Data") // تأكد من أن هذا يشير إلى المشروع الذي يحتوي على المهاجرات
+                );
+            }
         }
         #endregion
 
         #region OnModelCreating
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -85,7 +90,6 @@ namespace GloryScout.Data
                 }
             );
 
-
             // Change Identity Schema and Table Names
             modelBuilder.Entity<User>().ToTable("Users");
             modelBuilder.Entity<IdentityRole<Guid>>().ToTable("Roles");
@@ -95,24 +99,22 @@ namespace GloryScout.Data
             modelBuilder.Entity<IdentityRoleClaim<Guid>>().ToTable("RoleClaims");
             modelBuilder.Entity<IdentityUserToken<Guid>>().ToTable("UserTokens");
 
+            // UserFollowings Config
+            modelBuilder.Entity<UserFollowings>()
+                .HasKey(uf => new { uf.FollowerId, uf.FolloweeId });
 
-			modelBuilder.Entity<UserFollowings>()
-		.HasKey(uf => new { uf.FollowerId, uf.FolloweeId }); // Composite primary key
+            modelBuilder.Entity<UserFollowings>()
+                .HasOne(uf => uf.Follower)
+                .WithMany(u => u.Following)
+                .HasForeignKey(uf => uf.FollowerId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-			modelBuilder.Entity<UserFollowings>()
-				.HasOne(uf => uf.Follower)
-				.WithMany(u => u.Following)
-				.HasForeignKey(uf => uf.FollowerId)
-				.OnDelete(DeleteBehavior.Restrict); // Prevent cascade deletes
-
-			modelBuilder.Entity<UserFollowings>()
-				.HasOne(uf => uf.Followee)
-				.WithMany(u => u.Followers)
-				.HasForeignKey(uf => uf.FolloweeId)
-				.OnDelete(DeleteBehavior.Restrict); // Prevent cascade deletes
-		}
-	}
-    
+            modelBuilder.Entity<UserFollowings>()
+                .HasOne(uf => uf.Followee)
+                .WithMany(u => u.Followers)
+                .HasForeignKey(uf => uf.FolloweeId)
+                .OnDelete(DeleteBehavior.Restrict);
+        }
+        #endregion
+    }
 }
-        
-#endregion
