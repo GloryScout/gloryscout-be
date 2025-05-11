@@ -1,95 +1,142 @@
-# Glory Scout Football Academy
+# GloryScout
 
-![Glory Scout Logo](./images/Frame%2038.png)
+A robust backend API for a social platform connecting scouts and players in the sports domain.
 
-## 🌟 About
+## 🚀 Overview
 
-Glory Scout is a platform designed to connect football players with scouts, clubs, and opportunities worldwide. Our mission is to help aspiring and professional players showcase their talent and take their careers to the next level.
+GloryScout is a comprehensive backend solution designed to facilitate the connection between sports talents and scouts. The platform enables user profile management, content posting, interaction through comments and likes, and includes an integrated payment system.
 
-## 🔑 Key Features
+## 📋 Table of Contents
 
-- **Player Profiles** - Create detailed profiles with videos, stats, and achievements
-- **Coach/Scout Dashboard** - Discover talented players from around the world
-- **Feed System** - Stay updated with the latest football news and opportunities
-- **Secure Authentication** - Protect your data with our secure login system
-- **Responsive Design** - Access the platform from any device
+- [Project Structure](#project-structure)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Docker Deployment](#docker-deployment)
+- [API Endpoints](#api-endpoints)
+- [Authentication and Authorization](#authentication-and-authorization)
+- [Database](#database)
+- [Configuration](#configuration)
 
-## 🔧 Tech Stack
+## 🏗️ Project Structure
 
-- **Frontend**: HTML5, CSS3, JavaScript
-- **API Integration**: Axios
-- **Backend**: ASP.NET Core (API endpoints at glory-scout.tryasp.net)
-- **Authentication**: JWT token-based authentication
+The solution follows a clean architecture approach with the following projects:
 
-## 📋 Pages & Functionality
+- **GloryScout.API**: Entry point for the application containing controllers and service configurations
+- **GloryScout.Domain**: Contains DTOs, validators and business logic
+- **GloryScout.Data**: Data access layer with models, repositories, and database context
+- **GloryScout.Infrastructure**: Cross-cutting concerns, helpers, and configurations
 
-### For Players
-- Sign up and create detailed profiles
-- Upload videos and statistics
-- Browse opportunities
-- Connect with coaches and scouts
-- View and manage subscription plans
+## ✨ Features
 
-### For Coaches/Scouts
-- Create professional accounts
-- Browse player profiles
-- Filter players by position, skills, and location
-- Contact promising talents
-- Track player development
+- **User Authentication and Profile Management**: Register, login, and manage user profiles
+- **Content Posting**: Create, retrieve, update, and delete posts
+- **Social Interactions**: Like, comment, and follow functionality
+- **Search Capabilities**: Search for players, scouts, and content
+- **Payment Integration**: Secure payment processing via Paymob
+- **Verification System**: Email verification for secure account management
 
-## 🚀 Getting Started
+## 🛠️ Tech Stack
+
+- **Framework**: ASP.NET Core 8.0
+- **API**: RESTful with Swagger documentation
+- **Data Access**: Entity Framework Core
+- **Validation**: FluentValidation
+- **Authentication**: JWT Bearer tokens
+- **Payment Gateway**: Paymob
+- **Deployment**: Docker containerization
+
+## 🏁 Getting Started
 
 ### Prerequisites
-- Node.js (for development)
-- Modern web browser
+
+- .NET 8.0 SDK or later
+- SQL Server (or compatible database)
+- Docker (optional, for containerized deployment)
 
 ### Installation
 
 1. Clone the repository:
-```bash
-git clone https://github.com/your-username/Glory-Scout-Frontend.git
-```
+   ```bash
+   git clone https://github.com/yourusername/GloryScout.git
+   cd GloryScout
+   ```
 
-2. Navigate to the project directory:
-```bash
-cd Glory-Scout-Frontend
-```
+2. Restore dependencies:
+   ```bash
+   dotnet restore
+   ```
 
-3. Install dependencies:
-```bash
-npm install
-```
+3. Update database connection string in `appsettings.json` in the GloryScout.API project.
 
-4. Open `html/index.html` in your browser to view the application.
+4. Apply migrations:
+   ```bash
+   dotnet ef database update --project GloryScout.Data --startup-project GloryScout.API
+   ```
 
-## 📱 Usage
+5. Run the application:
+   ```bash
+   dotnet run --project GloryScout.API
+   ```
 
-1. Create an account (player or coach)
-2. Complete your profile with all relevant information
-3. Upload videos and statistics (for players)
-4. Browse and connect with other users
-5. Explore subscription plans for premium features
+### Docker Deployment
 
-## 🔮 Future Enhancements
+1. Build the Docker image:
+   ```bash
+   docker build -t gloryscout -f GloryScout.API/Dockerfile .
+   ```
 
-- Mobile application
-- Advanced analytics for player performance
-- Real-time messaging system
-- Integration with major football databases
-- AI-powered talent assessment
+2. Run the container:
+   ```bash
+   docker run -p 8080:8080 -p 8081:8081 gloryscout
+   ```
 
-## 👥 Contributing
+## 🔌 API Endpoints
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+The API exposes the following controller endpoints:
 
-## 📜 License
+- **Users**: Authentication, registration, and user management
+- **UserProfile**: Profile creation, updating, and retrieval
+- **Post**: Content creation and management
+- **Search**: Search functionality across the platform
+- **Payment**: Payment processing and tracking
+- **HomePage**: Featured and relevant content for users
 
-This project is licensed under the [MIT License](LICENSE).
+Access the Swagger UI when running in development mode: `https://localhost:8081/swagger`
 
-## 📞 Contact
+## 🔐 Authentication and Authorization
 
-For any inquiries, please reach out to us at [contact@gloryscout.com](mailto:contact@gloryscout.com).
+The API uses JWT Bearer tokens for authentication and authorization. Users must register and login to obtain a token that must be included in the Authorization header for secured endpoints.
+
+## 💾 Database
+
+The application uses Entity Framework Core with a Code-First approach. The database models are organized in domains like:
+
+- User management
+- Player and scout profiles
+- Posts, comments, and likes
+- Followers and connections
+- Payment transactions
+- Verification processes
+
+## ⚙️ Configuration
+
+Key configurations in `appsettings.json` include:
+
+- Database connection strings
+- JWT authentication settings
+- Paymob integration keys
+- CORS policies
+- Logging settings
 
 ---
 
-Built with ⚽ and passion for the beautiful game. 
+## 📝 License
+
+[Specify your license here]
+
+## 📞 Contact
+
+[Your contact information]
