@@ -332,5 +332,27 @@ namespace GloryScout.API.Services.Posts
 					.ToList()
 			};	
 		}
+
+
+		public async Task<PostDetailDto> UpdatePostAsync(Guid postId, Guid userId, string description)
+		{
+			var post = await _context.Posts
+				.FirstOrDefaultAsync(p => p.Id == postId);
+
+			if (post == null)
+				throw new InvalidOperationException("Post not found.");
+
+			if (post.UserId != userId)
+				throw new InvalidOperationException("You are not authorized to update this post.");
+
+			// Update the description
+			post.Description = description;
+
+			await _context.SaveChangesAsync();
+
+			// Return the full post details
+			return await GetPostByIdWithDetailsAsync(postId, userId);
+		}
+
 	}
 }

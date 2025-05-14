@@ -8,6 +8,7 @@ namespace GloryScout.Data.Models.payment
 {
     public class OrderResponse
     {
+        [Key]
         public int Id { get; set; }
 
     }

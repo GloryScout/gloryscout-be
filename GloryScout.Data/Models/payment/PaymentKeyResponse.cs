@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,7 @@ namespace GloryScout.Data.Models.payment
 {
     public class PaymentKeyResponse
     {
+        [Key]
 		[JsonPropertyName("token")] // Match Paymob's lowercase property name
 		public string Token { get; set; }
 

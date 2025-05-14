@@ -8,6 +8,7 @@ namespace GloryScout.Data.Models.payment
 {
     public class AuthTokenResponse
     {
+        [Key]
         public string Token { get; set; }
 
     }

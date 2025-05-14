@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using GloryScout.Data.Models.Followers;
 using Microsoft.Extensions.Configuration;
+using GloryScout.Data.Models.payment;
 
 
 namespace GloryScout.Data
@@ -23,8 +24,10 @@ namespace GloryScout.Data
         #region DbSet
 
         public override DbSet<User> Users => Set<User>();
-
-        public virtual DbSet<ResetPassword> ResetPasswords => Set<ResetPassword>();
+        public virtual DbSet<AuthTokenResponse> AuthTokenResponsess => Set<AuthTokenResponse>();
+		public virtual DbSet<OrderResponse> OrderResponses => Set<OrderResponse>();
+		public virtual DbSet<PaymentKeyResponse> Paymentkeys => Set<PaymentKeyResponse>();
+		public virtual DbSet<ResetPassword> ResetPasswords => Set<ResetPassword>();
         public DbSet<Post> Posts => Set<Post>();
         public DbSet<Like> Likes => Set<Like>();
         public DbSet<Comment> Comments => Set<Comment>();

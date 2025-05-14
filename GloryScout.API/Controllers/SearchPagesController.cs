@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using GloryScout.API.Services.UserProfiles;
+using GloryScout.Domain.Dtos.UserProfileDtos;
 
 namespace GloryScout.API.Controllers
 {
@@ -148,6 +149,7 @@ namespace GloryScout.API.Controllers
 		[HttpGet("get-profile/{id}")]
 		public async Task<IActionResult> GetUserProfileById(Guid id)
 		{
+
 			var user = await _userProfileService.GetUserByIdAsync(id);
 			if (user == null)
 			{
@@ -155,7 +157,29 @@ namespace GloryScout.API.Controllers
 			}
 
 			var profileDto = await _userProfileService.GetProfileasync(id.ToString());
-			return Ok(profileDto);
+			// determine viewer ID
+			Guid? viewerId = null;
+			var uid = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+			if (Guid.TryParse(uid, out var parsed)) viewerId = parsed;
+
+			// check follow status
+			var isFollowing = viewerId.HasValue ? await _userProfileService.IsFollowingAsync(viewerId.Value, id) : false;
+
+			// wrap and return
+			var response = new ProfileResponse
+			{
+				Profile = profileDto,
+				IsFollowing = isFollowing
+			};
+
+			return Ok(response);
+		}
+
+
+		public class ProfileResponse
+		{
+			public UserProfileDto Profile { get; set; }
+			public bool IsFollowing { get; set; }
 		}
 
 	}

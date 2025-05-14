@@ -55,6 +55,24 @@ namespace YourNamespace.Controllers
 			}
 		}
 
+
+
+		[HttpPost]
+		public async Task<IActionResult> ReceiveCallback([FromBody] PaymobCallbackData data)
+		{
+			// TODO: Validate HMAC signature here for security
+
+			// Process the received data
+			// For example, update order status in your database
+
+			return Ok(); // Respond with 200 OK to acknowledge receipt
+		}
+
+
+
+
+
+
 		public class PaymentRequest
 		{
 			public int AmountCents { get; set; }
@@ -102,6 +120,39 @@ namespace YourNamespace.Controllers
 
 			[JsonPropertyName("state")]
 			public string State { get; set; }
+		}
+
+
+
+
+
+		public class PaymobCallbackData
+		{
+			[JsonPropertyName("transaction_id")]
+			public string TransactionId { get; set; }
+
+			[JsonPropertyName("issuer")]
+			public string Issuer { get; set; }
+
+			[JsonPropertyName("amount")]
+			public decimal Amount { get; set; }
+
+			[JsonPropertyName("disbursement_status")]
+			public string DisbursementStatus { get; set; }
+
+			[JsonPropertyName("status_code")]
+			public string StatusCode { get; set; }
+
+			[JsonPropertyName("status_description")]
+			public string StatusDescription { get; set; }
+
+			[JsonPropertyName("created_at")]
+			public string CreatedAt { get; set; }
+
+			[JsonPropertyName("updated_at")]
+			public string UpdatedAt { get; set; }
+
+			// Include other fields as needed based on Paymob's callback payload
 		}
 
 	}

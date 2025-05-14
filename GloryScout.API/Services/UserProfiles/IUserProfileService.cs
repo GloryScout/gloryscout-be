@@ -17,5 +17,6 @@ namespace GloryScout.API.Services.UserProfiles;
 	Task DeletePostAsync(Guid postId, Guid userId);
 	Task UpdateProfileAsync(Guid userId, string profileDescription, string profilePhotoUrl);
 	Task<Post> GetPostByIdAsync(Guid postId);
+	Task<bool> IsFollowingAsync(Guid viewerId, Guid profileId);
 }
 

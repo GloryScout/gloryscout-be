@@ -20,6 +20,8 @@ using SpareParts.Data;
 using GloryScout.API.Services.UserProfiles;
 using GloryScout.API.Services.Posts;
 using GloryScout.API.SwaggerSchemas;
+using X.Paymob.CashIn;
+using Microsoft.Extensions.Configuration;
 
 
 
@@ -178,6 +180,8 @@ public static class ApplicationService
 
 		services.AddScoped<IUserProfileService, UserProfileService>();
 		services.AddScoped<IPostServices, PostServices>();
+
+
 
 		#endregion
 

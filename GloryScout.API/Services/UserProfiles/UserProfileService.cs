@@ -113,6 +113,7 @@ namespace GloryScout.API.Services.UserProfiles
 					Posts = user.Posts.Select(p => new PostDto
 					{
 						Id = p.Id,
+						UserId=p.User.Id,
 						Description=p.Description,
 						PosrUrl = p.PosrUrl
 					}).ToList(),
@@ -179,6 +180,13 @@ namespace GloryScout.API.Services.UserProfiles
 				user.ProfilePhoto = profilePhotoUrl;
 			}
 			await _context.SaveChangesAsync();
+		}
+
+
+		public async Task<bool> IsFollowingAsync(Guid viewerId, Guid profileId)
+		{
+			return await _context.UserFollowings
+				.AnyAsync(f => f.FollowerId == viewerId && f.FolloweeId == profileId);
 		}
 	}
 }

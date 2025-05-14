@@ -120,5 +120,37 @@ namespace GloryScout.API.Controllers
 				return BadRequest(new { error = ex.Message });
 			}
 		}
+
+		// PUT: api/posts/{postId}
+		[HttpPut("Upate-post/{postId:guid}")]
+		public async Task<IActionResult> UpdatePost([FromRoute] Guid postId, [FromBody] UpdatePostRequest request)
+		{
+			var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+			try
+			{
+				var updatedPost = await _postServices.UpdatePostAsync(postId, userId, request.Description);
+				return Ok(updatedPost);
+			}
+			catch (InvalidOperationException ex)
+			{
+				// Return 403 Forbidden if user is not authorized
+				if (ex.Message.Contains("not authorized"))
+					return StatusCode(403, new { error = ex.Message });
+
+				// Return 404 Not Found if post doesn't exist
+				return NotFound(new { error = ex.Message });
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, new { error = "An error occurred while updating the post: " + ex.Message });
+			}
+		}
+
+
+		public class UpdatePostRequest
+		{
+			public string Description { get; set; }
+		}
+
 	}
 }

@@ -18,6 +18,7 @@ namespace GloryScout.API.Services.Posts
 		Task DeleteCommentAsync(Guid commentId, Guid userId);
 
 		Task<PostDetailDto> GetPostByIdWithDetailsAsync(Guid postId, Guid currentUserId);
+		Task<PostDetailDto> UpdatePostAsync(Guid postId, Guid userId, string description);
 
 	}
 
