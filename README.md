@@ -133,10 +133,6 @@ Key configurations in `appsettings.json` include:
 
 ---
 
-## 📝 License
-
-[Specify your license here]
-
 ## 📞 Contact
 
-[Your contact information]
++201015374542 -> whatsapp

@@ -6,13 +6,11 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace GloryScout.Data.Models.payment
+namespace GloryScout.Data.Models.Payment
 {
     public class PaymentKeyResponse
     {
-        [Key]
-		[JsonPropertyName("token")] // Match Paymob's lowercase property name
-		public string Token { get; set; }
-
+        [JsonPropertyName("token")] // Match Paymob's lowercase property name
+        public string Token { get; set; }
     }
 }
