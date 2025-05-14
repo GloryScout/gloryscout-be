@@ -4,8 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using GloryScout.Data.Models.Followers;
 using GloryScout.Data.Models;
-using GloryScout.Data.Models.Payment;
-using GloryScout.Data.Models.payment;
+//using GloryScout.Data.Models.Payment;
+//using GloryScout.Data.Models.payment;
 
 namespace GloryScout.Data
 {
@@ -23,9 +23,9 @@ namespace GloryScout.Data
 
         #region DbSet
         public override DbSet<User> Users => Set<User>();
-        public virtual DbSet<AuthTokenResponse> AuthTokenResponsess => Set<AuthTokenResponse>();
-		public virtual DbSet<OrderResponse> OrderResponses => Set<OrderResponse>();
-		public virtual DbSet<PaymentKeyResponse> Paymentkeys => Set<PaymentKeyResponse>();
+  //      public virtual DbSet<AuthTokenResponse> AuthTokenResponsess => Set<AuthTokenResponse>();
+		//public virtual DbSet<OrderResponse> OrderResponses => Set<OrderResponse>();
+		//public virtual DbSet<PaymentKeyResponse> Paymentkeys => Set<PaymentKeyResponse>();
 		public virtual DbSet<ResetPassword> ResetPasswords => Set<ResetPassword>();
         public DbSet<Post> Posts => Set<Post>();
         public DbSet<Like> Likes => Set<Like>();
@@ -34,7 +34,7 @@ namespace GloryScout.Data
         public DbSet<Player> Players => Set<Player>();
         public DbSet<Scout> Scouts => Set<Scout>();
         public DbSet<UserFollowings> UserFollowings => Set<UserFollowings>();
-        public DbSet<PaymobCallbackResponse> PaymobCallbackResponses => Set<PaymobCallbackResponse>();
+        //public DbSet<PaymobCallbackResponse> PaymobCallbackResponses => Set<PaymobCallbackResponse>();
        
 
 
@@ -46,7 +46,7 @@ namespace GloryScout.Data
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder.UseSqlServer(
-                    "Data Source=MUHMD;Initial Catalog=GloryScoutDatabase;Integrated Security=True;TrustServerCertificate=True;",
+					"Data Source=DESKTOP-8BMN06A;Initial Catalog=GloryScoutDatabase;Integrated Security=True;TrustServerCertificate=True;",
                     options => options.MigrationsAssembly("GloryScout.Data") // تأكد من أن هذا يشير إلى المشروع الذي يحتوي على المهاجرات
                 );
             }

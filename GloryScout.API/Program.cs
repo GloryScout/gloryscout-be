@@ -14,27 +14,27 @@ var builder = WebApplication.CreateBuilder(args);
 // Registers Application Services , Passes Configuration Settings and Facilitates Dependency Injection
 builder.Services.AddApplicationServices(builder.Configuration);
 
-builder.Services.AddScoped<IOrderService, OrderService>();
+//builder.Services.AddScoped<IOrderService, OrderService>();
 
 var configuration = builder.Configuration;
 
 //paymob
 
-builder.Services.AddHttpClient<PaymobService>();
-builder.Services.AddPaymobCashIn(config => {
-	var paymobSection = configuration.GetSection("Paymob");
+//builder.Services.AddHttpClient<PaymobService>();
+//builder.Services.AddPaymobCashIn(config => {
+//	var paymobSection = configuration.GetSection("Paymob");
 
-	// Fix for CS8601: Possible null reference assignment.
-	builder.Services.AddPaymobCashIn(cashInConfig =>
-	{
-		var paymobSection = configuration.GetSection("Paymob");
+//	// Fix for CS8601: Possible null reference assignment.
+//	builder.Services.AddPaymobCashIn(cashInConfig =>
+//	{
+//		var paymobSection = configuration.GetSection("Paymob");
 
-		// Use null-coalescing operator to provide a default value or throw an exception if null
-		cashInConfig.ApiKey = paymobSection["ApiKey"] ?? throw new InvalidOperationException("Paymob ApiKey is not configured.");
-		cashInConfig.Hmac = paymobSection["SecretKey"] ?? throw new InvalidOperationException("Paymob SecretKey is not configured.");
-	});
+//		// Use null-coalescing operator to provide a default value or throw an exception if null
+//		cashInConfig.ApiKey = paymobSection["ApiKey"] ?? throw new InvalidOperationException("Paymob ApiKey is not configured.");
+//		cashInConfig.Hmac = paymobSection["SecretKey"] ?? throw new InvalidOperationException("Paymob SecretKey is not configured.");
+//	});
 
-});
+//});
 
 
 builder.Services.AddCors(options =>
