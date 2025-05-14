@@ -47,7 +47,7 @@ namespace GloryScout.Data
             {
                 optionsBuilder.UseSqlServer(
 					"Data Source=DESKTOP-8BMN06A;Initial Catalog=GloryScoutDatabase;Integrated Security=True;TrustServerCertificate=True;",
-                    options => options.MigrationsAssembly("GloryScout.Data") // تأكد من أن هذا يشير إلى المشروع الذي يحتوي على المهاجرات
+                    options => options.MigrationsAssembly("GloryScout.Data") 
                 );
             }
         }

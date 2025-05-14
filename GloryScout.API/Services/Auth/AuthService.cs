@@ -95,7 +95,7 @@ public class AuthService : IAuthService
 			Email = user.Email,
 			ExpiresOn = jwtSecurityToken.ValidTo,
 			IsAuthenticated = true,
-			Role = "Coach",
+			Role = "scout",
 			Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
 			Username = user.UserName
 		};

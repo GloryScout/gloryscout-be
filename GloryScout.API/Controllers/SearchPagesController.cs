@@ -166,21 +166,23 @@ namespace GloryScout.API.Controllers
 			var isFollowing = viewerId.HasValue ? await _userProfileService.IsFollowingAsync(viewerId.Value, id) : false;
 
 			// wrap and return
-			var response = new ProfileResponse
+			var response = new OtherUserProfile
 			{
-				Profile = profileDto,
-				IsFollowing = isFollowing
+				Id=profileDto.Id,
+				Username = profileDto.Username,
+				ProfileDescription = profileDto.ProfileDescription,
+				ProfilePhoto = profileDto.ProfilePhoto,
+				FollowersCount = profileDto.FollowersCount,
+				FollowingCount = profileDto.FollowingCount,
+				Posts = profileDto.Posts,
+				IsFollowing = isFollowing,
 			};
 
 			return Ok(response);
 		}
 
 
-		public class ProfileResponse
-		{
-			public UserProfileDto Profile { get; set; }
-			public bool IsFollowing { get; set; }
-		}
+		
 
 	}
 }
