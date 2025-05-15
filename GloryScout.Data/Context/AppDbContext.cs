@@ -4,8 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using GloryScout.Data.Models.Followers;
 using GloryScout.Data.Models;
-//using GloryScout.Data.Models.Payment;
-//using GloryScout.Data.Models.payment;
+using GloryScout.Data.Models.Payment;
+using GloryScout.Data.Models.payment;
 
 namespace GloryScout.Data
 {
@@ -23,10 +23,11 @@ namespace GloryScout.Data
 
         #region DbSet
         public override DbSet<User> Users => Set<User>();
-  //      public virtual DbSet<AuthTokenResponse> AuthTokenResponsess => Set<AuthTokenResponse>();
-		//public virtual DbSet<OrderResponse> OrderResponses => Set<OrderResponse>();
-		//public virtual DbSet<PaymentKeyResponse> Paymentkeys => Set<PaymentKeyResponse>();
-		public virtual DbSet<ResetPassword> ResetPasswords => Set<ResetPassword>();
+        public virtual DbSet<AuthTokenResponse> AuthTokenResponsess => Set<AuthTokenResponse>();
+        public DbSet<Subscription> Subscriptions => Set<Subscription>();
+
+		public virtual DbSet<OrderResponse> OrderResponses => Set<OrderResponse>();
+        public virtual DbSet<ResetPassword> ResetPasswords => Set<ResetPassword>();
         public DbSet<Post> Posts => Set<Post>();
         public DbSet<Like> Likes => Set<Like>();
         public DbSet<Comment> Comments => Set<Comment>();
@@ -34,7 +35,6 @@ namespace GloryScout.Data
         public DbSet<Player> Players => Set<Player>();
         public DbSet<Scout> Scouts => Set<Scout>();
         public DbSet<UserFollowings> UserFollowings => Set<UserFollowings>();
-        //public DbSet<PaymobCallbackResponse> PaymobCallbackResponses => Set<PaymobCallbackResponse>();
        
 
 
@@ -116,7 +116,33 @@ namespace GloryScout.Data
                 .WithMany(u => u.Followers)
                 .HasForeignKey(uf => uf.FolloweeId)
                 .OnDelete(DeleteBehavior.Restrict);
-        }
+
+
+
+			// Configure Subscription relationships
+			modelBuilder.Entity<Subscription>()
+		        .HasOne<User>() // No navigation property
+		        .WithMany()
+		        .HasForeignKey(s => s.UserId)
+		        .OnDelete(DeleteBehavior.Restrict);
+
+			modelBuilder.Entity<Subscription>()
+				.HasOne<User>() // No navigation property
+				.WithMany()
+				.HasForeignKey(s => s.RequestedUserId)
+				.OnDelete(DeleteBehavior.Restrict);
+
+
+			modelBuilder.Entity<Subscription>()
+	            .HasOne(s => s.User)
+	            .WithMany(u => u.SubscriptionsPaid) // Maps to SubscriptionsPaid in User
+	            .HasForeignKey(s => s.UserId);
+
+			modelBuilder.Entity<Subscription>()
+				.HasOne(s => s.RequestedUser)
+				.WithMany(u => u.SubscriptionsRequested) // Maps to SubscriptionsRequested in User
+				.HasForeignKey(s => s.RequestedUserId);
+		}
         #endregion
     }
 }

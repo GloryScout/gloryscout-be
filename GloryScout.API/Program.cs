@@ -1,6 +1,7 @@
 using System.Reflection;
 using System.Text.Json.Serialization;
 using FluentValidation.AspNetCore;
+using gloryscout.api.services;
 using GloryScout.API.Services;
 using GloryScout.API.Services;
 using X.Paymob.CashIn;
@@ -20,21 +21,25 @@ var configuration = builder.Configuration;
 
 //paymob
 
-//builder.Services.AddHttpClient<PaymobService>();
-//builder.Services.AddPaymobCashIn(config => {
-//	var paymobSection = configuration.GetSection("Paymob");
+builder.Services.AddHttpClient<paymobservice>();
+builder.Services.AddPaymobCashIn(config =>
+{
+    var paymobSection = configuration.GetSection("Paymob");
 
-//	// Fix for CS8601: Possible null reference assignment.
-//	builder.Services.AddPaymobCashIn(cashInConfig =>
-//	{
-//		var paymobSection = configuration.GetSection("Paymob");
+    // Fix for CS8601: Possible null reference assignment.
+    builder.Services.AddPaymobCashIn(cashInConfig =>
+    {
+        var paymobSection = configuration.GetSection("Paymob");
 
-//		// Use null-coalescing operator to provide a default value or throw an exception if null
-//		cashInConfig.ApiKey = paymobSection["ApiKey"] ?? throw new InvalidOperationException("Paymob ApiKey is not configured.");
-//		cashInConfig.Hmac = paymobSection["SecretKey"] ?? throw new InvalidOperationException("Paymob SecretKey is not configured.");
-//	});
+        // Use null-coalescing operator to provide a default value or throw an exception if null
+        cashInConfig.ApiKey = paymobSection["ApiKey"] ?? throw new InvalidOperationException("Paymob ApiKey is not configured.");
+        cashInConfig.Hmac = paymobSection["SecretKey"] ?? throw new InvalidOperationException("Paymob SecretKey is not configured.");
+    });
 
-//});
+});
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.SetMinimumLevel(LogLevel.Information);
 
 
 builder.Services.AddCors(options =>
@@ -84,7 +89,7 @@ if (app.Environment.IsDevelopment())
 //    await next(context);
 //});
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseCors("AllowAll");
 
 app.UseAuthentication();

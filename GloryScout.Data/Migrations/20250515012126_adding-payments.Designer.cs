@@ -4,6 +4,7 @@ using GloryScout.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GloryScout.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250515012126_adding-payments")]
+    partial class addingpayments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -224,8 +227,8 @@ namespace GloryScout.Data.Migrations
                     b.Property<bool>("IsReturned")
                         .HasColumnType("bit");
 
-                    b.Property<long>("OrderId")
-                        .HasColumnType("bigint");
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
 
                     b.Property<string>("PaymentStatus")
                         .IsRequired()
@@ -250,11 +253,21 @@ namespace GloryScout.Data.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("UserId1")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("UserId2")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("RequestedUserId");
 
                     b.HasIndex("UserId");
+
+                    b.HasIndex("UserId1");
+
+                    b.HasIndex("UserId2");
 
                     b.ToTable("Subscriptions");
                 });
@@ -740,16 +753,24 @@ namespace GloryScout.Data.Migrations
             modelBuilder.Entity("GloryScout.Data.Models.payment.Subscription", b =>
                 {
                     b.HasOne("GloryScout.Data.User", "RequestedUser")
-                        .WithMany("SubscriptionsRequested")
+                        .WithMany()
                         .HasForeignKey("RequestedUserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("GloryScout.Data.User", "User")
-                        .WithMany("SubscriptionsPaid")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("GloryScout.Data.User", null)
+                        .WithMany("SubscriptionsPaid")
+                        .HasForeignKey("UserId1");
+
+                    b.HasOne("GloryScout.Data.User", null)
+                        .WithMany("SubscriptionsRequested")
+                        .HasForeignKey("UserId2");
 
                     b.Navigation("RequestedUser");
 

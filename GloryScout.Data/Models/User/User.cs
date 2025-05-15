@@ -1,4 +1,5 @@
 ﻿using GloryScout.Data.Models.Followers;
+using GloryScout.Data.Models.payment;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel;
 
@@ -31,6 +32,8 @@ namespace GloryScout.Data
 		public ICollection<Like> Likes { get; set; }
 		public ICollection<UserFollowings> Followers { get; set; }
 		public ICollection<UserFollowings> Following { get; set; }
+		public  ICollection<Subscription> SubscriptionsPaid { get; set; }
+		public  ICollection<Subscription> SubscriptionsRequested { get; set; }
 
 	}
 }
