@@ -60,7 +60,7 @@ The solution follows a clean architecture approach with the following projects:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/GloryScout.git
+   git clone https://github.com/[your-organization]/GloryScout.git
    cd GloryScout
    ```
 
@@ -100,8 +100,8 @@ The API exposes the following controller endpoints:
 - **Users**: Authentication, registration, and user management
 - **UserProfile**: Profile creation, updating, and retrieval
 - **Post**: Content creation and management
-- **Search**: Search functionality across the platform
-- **Payment**: Payment processing and tracking
+- **SearchPages**: Search functionality across the platform
+- **Payment**: Payment processing and tracking via Paymob integration
 - **HomePage**: Featured and relevant content for users
 
 Access the Swagger UI when running in development mode: `https://localhost:8081/swagger`
@@ -135,4 +135,6 @@ Key configurations in `appsettings.json` include:
 
 ## 📞 Contact
 
-+201015374542 -> whatsapp
+- WhatsApp: +201015374542
+- Email: [your-email@example.com]
+- GitHub: [your-github-profile]
