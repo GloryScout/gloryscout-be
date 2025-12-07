@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
@@ -47,7 +47,7 @@ namespace GloryScout.Controllers
 		{
 			if (request == null || request.AmountCents <= 0)
 			{
-				return BadRequest(new { message = "قيمة المبلغ يجب أن تكون أكبر من صفر." });
+				return BadRequest(new { message = "Amount must be greater than zero." });
 			}
 
 			try
@@ -55,13 +55,13 @@ namespace GloryScout.Controllers
 				var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 				if (string.IsNullOrEmpty(userId))
 				{
-					return Unauthorized(new { message = "المستخدم غير مصرح له." });
+					return Unauthorized(new { message = "User is not authorized." });
 				}
 
 				var user = await _dbContext.Users.FindAsync(Guid.Parse(userId));
 				if (user == null)
 				{
-					return NotFound(new { message = "المستخدم غير موجود." });
+					return NotFound(new { message = "User not found." });
 				}
 
 				// Check for existing pending subscription
@@ -70,7 +70,7 @@ namespace GloryScout.Controllers
 
 				if (existingSubscription != null)
 				{
-					return BadRequest("لديك طلب دفع معلق بالفعل.");
+					return BadRequest("You already have a pending payment request.");
 				}
 
 				// Generate unique merchant_order_id
@@ -130,10 +130,10 @@ namespace GloryScout.Controllers
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, "خطأ أثناء تنفيذ عملية الدفع عبر Paymوب.");
+				_logger.LogError(ex, "Error processing payment via Paymob.");
 				return StatusCode(500, new
 				{
-					message = "حدث خطأ أثناء تنفيذ الدفع. برجاء المحاولة لاحقًا.",
+					message = "An error occurred while processing the payment. Please try again later.",
 					error = ex.Message
 				});
 			}
@@ -225,7 +225,7 @@ namespace GloryScout.Controllers
 			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 			if (string.IsNullOrEmpty(userId))
 			{
-				return Unauthorized(new { message = "المستخدم غير مصرح له." });
+				return Unauthorized(new { message = "???????? ??? ???? ??." });
 			}
 
 			// Check for a valid subscription
@@ -233,7 +233,7 @@ namespace GloryScout.Controllers
 				.Where(s => s.UserId == Guid.Parse(userId)
 					&& s.RequestedUserId == requestedUserId
 					&& s.Success
-					&& s.Pending==false)
+					&& s.Pending == false)
 				.OrderByDescending(s => s.CreatedAt)
 				.FirstOrDefaultAsync();
 
@@ -286,8 +286,8 @@ namespace GloryScout.Controllers
 		//                return Ok("Payment already processed.");
 		//            }
 
-		//            order.IsPayed = true; // تحديث حالة الدفع
-		//            await _orderService.UpdateOrderAsync(order); // تحديث الطلب في قاعدة البيانات
+		//            order.IsPayed = true; // ????? ???? ?????
+		//            await _orderService.UpdateOrderAsync(order); // ????? ????? ?? ????? ????????
 
 		//            return Ok("Payment status updated successfully.");
 		//        }
